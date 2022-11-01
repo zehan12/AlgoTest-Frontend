@@ -1,10 +1,11 @@
-import { Fragment, useState } from "react"
+import { Fragment, useState, useEffect } from "react"
+import LegCard from "./LegCard";
+import LegList from "./LegList";
 import Segment from "./Segment";
 
 const Legs = () => {
     const handleClick = () => {
         setLegAdd(!legAdd);
-        console.log(legAdd)
     }
 
     const [legAdd, setLegAdd] = useState(false);
@@ -16,16 +17,38 @@ const Legs = () => {
     const [expiry, setExpiry] = useState("Weekly");
     const [strike, setStrike] = useState("Strike Type");
     const [strikeType, setStrikeType] = useState("ATM");
-    const [upper, setUpper] = useState(200)
-    const [lower, setLower] = useState(50)
+    const [upper, setUpper] = useState(200);
+    const [lower, setLower] = useState(50);
     const [premium, setPremium] = useState(50);
     const [plusMinus, setPlusMinus] = useState("+");
-    const [multiplier, setMultiplier] = useState(0.5)
+    const [multiplier, setMultiplier] = useState(0.5);
 
+    //? idea -------------------------
+    // const [leg, setLeg] = useState({
+    //     totalLeg: 1,
+    //     position: "Sell",
+    //     optionType: "Call",
+    //     expiry: "Weekly",
+    //     strike: "Strike Type",
+    //     strikeType: "ATM",
+    //     upper: 200,
+    //     lower: 50,
+    //     plusMinus: "+",
+    //     multiplier: 0.5
+    // });
+
+
+    //! add legItems in state
+    const [legItems, setLegItems] = useState(JSON.parse(localStorage.getItem("LEG")) || [])
 
     const handleChange = ({ target }) => {
         const { name, value } = target
-        console.log(name, value)
+        // switch ( name ) {
+        //     case "totalLot":
+        //         return setTotalLeg(value)
+        //        default:
+        //            return
+        // }
         if (name === "totalLot") setTotalLeg(value);
         else if (name === "position") setPosition(value);
         else if (name === "optionType") setOptionType(value);
@@ -37,29 +60,84 @@ const Legs = () => {
         else if (name === "lower") setLower(value);
         else if (name === "plusMinus") setPlusMinus(value);
         else if (name === "multiplier") setMultiplier(value);
-
     }
 
-    // const handleKey = (e) => {
-    //     const exceptThisSymbols = ["e", "E", "+", "-", "."];
-    //     exceptThisSymbols.includes(e.key)
-    // }
-
-    const handleSubmit = ( e ) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(totalLeg)
+        let StrikeParameter = strike === "Strike Type" ? strikeType :
+            strike === "Premium Range" ? { Lower: lower, Upper: upper } :
+                strike === "Closest Premium" ? { Premium: premium } :
+                    strike === "Straddle Width" ? { Adjustment: plusMinus, Multiplier: multiplier } : ""
+
+        const legData = {
+            id: Date.now(),
+            positionType: position,
+            Lots: totalLeg,
+            LegStopLoss: {
+                Type: "None",
+                value: 0,
+            },
+            LegTarget: {
+                Type: "None",
+                Value: 0,
+            },
+            LegTrailSL: {
+                Type: "None",
+                Value: {
+                    InstrumentMove: 0,
+                    StopLossMove: 0,
+                }
+            },
+            LegMomentum: {
+                Type: "None",
+                Value: 0
+            },
+            ExpiryKind: expiry,
+            EntryType: strike,
+
+
+            StrikeParameter,
+
+            InstrumentKind: optionType,
+
+            LegReentrySL: {
+                Type: "None",
+                Value: 1
+            },
+            LegReentryTP: {
+                Type: "None",
+                Value: 1
+            }
+        }
+        setLegItems([...legItems, legData]);
+
     }
+
+    useEffect(() => {
+        console.log("va")
+        storeLegToLocal()
+    }, [legItems])
+
+    const storeLegToLocal = () => {
+        const stringifyitems = JSON.stringify(legItems)
+        localStorage.setItem("LEG", stringifyitems)
+    }
+
+
+    console.log(legItems,"in leg comp")
 
     return (
         <Fragment>
             <div
-                className="bg-green-200 border-4-black mx-auto"
+                className="bg-[#F6F6F6] border-4-black mx-auto"
                 style={{ width: "80%" }}>
-                <div
-                    style={{ display: "flex", justifyContent: "space-between", padding: "20px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", padding: "20px" }}>
                     <h2 className="font-bold">Legs</h2>
                     <button
-                        style={{ opacity: legAdd ? "0.6" : "" }} className="font-bold text-xl text-[#375A9E]" onClick={handleClick}>+ Add Leg</button>
+                        style={{ opacity: legAdd ? "0.6" : "" }} className="font-bold text-xl text-[#375A9E]"
+                        onClick={handleClick}>
+                        + Add Leg
+                    </button>
                 </div>
                 {
                     legAdd ? <Fragment>
@@ -79,7 +157,7 @@ const Legs = () => {
                         />
                         <div className="p-4" >
                             <button className="px-14 py-1 bg-[#375A9E] text-white text-sm font-semibold rounded-full mr-2"
-                             onClick={(e)=>handleSubmit(e)}
+                                onClick={(e) => handleSubmit(e)}
                             >Add Leg</button>
                             <button className="px-14 py-1 bg-white text-[#375A9E] text-sm font-semibold rounded-full ml-2"
                                 onClick={() => setLegAdd(false)}>Cancel</button>
@@ -87,6 +165,10 @@ const Legs = () => {
                     </Fragment> : ""
                 }
             </div>
+            <LegList legItems={legItems} />
+            <LegCard
+             
+             />
         </Fragment>
     )
 }

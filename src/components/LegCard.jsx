@@ -1,17 +1,11 @@
 import { Fragment } from "react"
 
-const arrayOf20WithKey = (key) => {
-    let arr = [];
-    for (let i = 1; i <= 20; i++) {
-        arr.push(key + i);
-    }
-    return arr;
-}
+
 
 const LegCard = () => {
     return (
         <Fragment>
-            <div className="bg-blue-200">
+            <div className="bg-[#EFEFEF] rounded-md m-auto my-6" style={{width:"80%"}}>
                 <div className="flex justify-center items-baseline">
                     <h4 className="font-bold">
                         Lots:

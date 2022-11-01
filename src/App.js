@@ -6,7 +6,6 @@ function App() {
     <div className="App">
       <h1>Leg Feature</h1>
       <Legs />
-      <LegCard />
     </div>
   );
 }
