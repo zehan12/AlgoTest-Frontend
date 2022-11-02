@@ -123,6 +123,10 @@ const Legs = () => {
         localStorage.setItem("LEG", stringifyitems)
     }
 
+    const handleDelete = (id) => {
+        let itemUpdatedClone = legItems.filter(item => (item.id != id))
+        setLegItems(itemUpdatedClone)
+    }
 
     console.log(legItems,"in leg comp")
 
@@ -165,7 +169,7 @@ const Legs = () => {
                     </Fragment> : ""
                 }
             </div>
-            <LegList legItems={legItems} />
+            <LegList legItems={legItems} handleDelete={handleDelete} />
             <LegCard
              
              />
