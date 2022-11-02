@@ -37,6 +37,12 @@ const Legs = () => {
     //     multiplier: 0.5
     // });
 
+    // const [ legMomentumEnable, setLegMomentumEnable ] = useState(false);
+    // const [legTargetEnable, setLegTargetEnable] = useState(false);
+    // const [ legStopLossEnable, setLegStopLossEnable ] = useState(false);
+    // const [ leg ]
+
+
 
     //! add legItems in state
     const [legItems, setLegItems] = useState(JSON.parse(localStorage.getItem("LEG")) || [])
@@ -73,14 +79,23 @@ const Legs = () => {
             id: Date.now(),
             positionType: position,
             Lots: totalLeg,
+
+            legStopLossEnable: false,
+
             LegStopLoss: {
                 Type: "None",
                 value: 0,
             },
+
+            legTargetEnable: false,
+
             LegTarget: {
                 Type: "None",
                 Value: 0,
             },
+
+            LegTrailSLEnable: false,
+
             LegTrailSL: {
                 Type: "None",
                 Value: {
@@ -88,6 +103,9 @@ const Legs = () => {
                     StopLossMove: 0,
                 }
             },
+
+            legMomentumEnable: false,
+
             LegMomentum: {
                 Type: "None",
                 Value: 0
@@ -100,10 +118,14 @@ const Legs = () => {
 
             InstrumentKind: optionType,
 
+            LegReentrySLEnable: false,
+
             LegReentrySL: {
                 Type: "None",
                 Value: 1
             },
+
+            LegReentryTPEnable: false,
             LegReentryTP: {
                 Type: "None",
                 Value: 1
@@ -114,7 +136,6 @@ const Legs = () => {
     }
 
     useEffect(() => {
-        console.log("va")
         storeLegToLocal()
     }, [legItems])
 
@@ -124,11 +145,32 @@ const Legs = () => {
     }
 
     const handleDelete = (id) => {
-        let itemUpdatedClone = legItems.filter(item => (item.id != id))
+        let itemUpdatedClone = legItems.filter(item => (item.id !== id))
         setLegItems(itemUpdatedClone)
     }
 
-    console.log(legItems,"in leg comp")
+    const handleItems = (id, { target }) => {
+        const { name, value } = target
+        if (target.type === "checkbox" && target.checked !== undefined) {
+            let toggleEnables = legItems.map(item => {
+                if (item.id === id) {
+                    item[name] = !!target.checked;
+                }
+                return { ...item }
+            })
+            setLegItems([...toggleEnables]);
+        } else {
+            let itemUpdatedClone = legItems.map(item => {
+                if (item.id === id) {
+                    item[name] = value;
+                }
+                return { ...item }
+            })
+            setLegItems([...itemUpdatedClone]);
+        }
+    }
+
+
 
     return (
         <Fragment>
@@ -169,10 +211,11 @@ const Legs = () => {
                     </Fragment> : ""
                 }
             </div>
-            <LegList legItems={legItems} handleDelete={handleDelete} />
-            <LegCard
-             
-             />
+            <LegList
+                legItems={legItems}
+                handleDelete={handleDelete}
+                handleItems={handleItems}
+            />
         </Fragment>
     )
 }

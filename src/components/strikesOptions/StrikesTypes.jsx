@@ -20,7 +20,6 @@ const arrayOf20WithKey = (key) => {
 }
 
 const Option = ({ val }) => {
-    console.log("render")
     return (
         <>
             {arrayOf20WithKey(val).map((ele) => <option key={ele} value={ele}>{ele}</option>)}

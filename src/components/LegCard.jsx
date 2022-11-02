@@ -1,4 +1,4 @@
-import { Fragment } from "react"
+import { Fragment, useState } from "react"
 import ClosestPremiumCard from "./strikesOptions/ClosestPremiumCard";
 import PremiumRangeCard from "./strikesOptions/PremiumRangeCard";
 import SelectStrikesCriteria from "./strikesOptions/SelectStrikesCriteria";
@@ -7,10 +7,33 @@ import StrikesTypes from "./strikesOptions/StrikesTypes";
 
 
 
-const LegCard = ( { id , handleDelete } ) => {
+const LegCard = ({
+    id,
+    handleDelete,
+    handleItems,
+    Lots,
+    positionType,
+    expiryKind,
+    instrumentKind,
+    entryType,
+    strikeParamemter,
+
+    legMomentumEnable
+
+
+}) => {
+    console.log(legMomentumEnable,"inside legCard", typeof legMomentumEnable);
+
+    // console.log(strikeParamemter)
+
+    const [Type, setType] = useState(entryType)
+    const handleEntry = ({ target }) => {
+        const { value } = target
+        setType(value)
+    }
     return (
         <Fragment>
-            <div onClick={()=>handleDelete(id)} className="bg-red-600">{id}</div>
+            <div onClick={() => handleDelete(id)} className="bg-red-600">{id}</div>
             <div className="bg-[#EFEFEF] rounded-md m-auto my-6" style={{ width: "80%" }}>
                 <div className="flex justify-center items-baseline">
                     <h4 className="font-bold">
@@ -18,8 +41,14 @@ const LegCard = ( { id , handleDelete } ) => {
                     </h4>
                     <input
                         className="border-black m-3 px-3 rounded-full h-5 w-14"
-                        type="number" min="1" value="1" />
-                    <select className="m-2 bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-18 py-1 px-2 rounded-full" name="postion" value="Sell">
+                        type="number" min="1"
+                        name="Lots"
+                        value={Lots}
+                        onChange={(e) => handleItems(id, e)} />
+                    <select className="m-2 bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-18 py-1 px-2 rounded-full"
+                        name="PositionType" value={positionType}
+                        onChange={(e) => handleItems(id, e)}
+                    >
                         <option value="Sell">Sell</option>
                         <option value="Buy">Buy</option>
                     </select>
@@ -27,45 +56,52 @@ const LegCard = ( { id , handleDelete } ) => {
                     {/* -------------------------------------------------------------------------------------------------
                                            //! if any option selected
                     -----------------------------------------------------------------------------------------------------*/}
-                    <select className="m-2 bg-[#375A9E] text-white text-xs font-semibold  border-x-4 border-[#375A9E] w-18 py-1 px-2 rounded-full" name="postion" value="Weekly">
+                    <select className="m-2 bg-[#375A9E] text-white text-xs font-semibold  border-x-4 border-[#375A9E] w-18 py-1 px-2 rounded-full" name="ExpiryKind" value={expiryKind} onChange={(e)=>handleItems(id,e)}>
                         <option value="Weekly">Weekly</option>
                         <option value="Monthly">Monthly</option>
                     </select>
 
-                    <select className="m-2 bg-[#375A9E] text-white text-xs font-semibold  border-x-4 border-[#375A9E] w-18 py-1 px-2 rounded-full" name="postion" value="Call">
+                    <select className="m-2 bg-[#375A9E] text-white text-xs font-semibold  border-x-4 border-[#375A9E] w-18 py-1 px-2 rounded-full" name="InstrumentKind" value={instrumentKind} onChange={(e)=>handleItems(id,e)}>
                         <option value="Call">Call</option>
                         <option value="Buy">Buy</option>
                     </select>
 
-                    {/* -------------------------------------------------------------------------------------------------
-                                           //! select Types will enable further rendering
-                    -----------------------------------------------------------------------------------------------------*/}
 
-                    <SelectStrikesCriteria />
+                    <SelectStrikesCriteria
+                        entryType={entryType}
+                        id={id}
+                        handleItems={handleItems}
+                        handleEntry={handleEntry}
+                    />
 
-                    {/* -------------------------------------------------------------------------------------------------
-                                           //! if  Strike Type select after an event
-                    -----------------------------------------------------------------------------------------------------*/}
+                    {
+                        Type === "Strike Type" ?
+                            <StrikesTypes
+                                id={id}
+                                handleItems={handleItems}
+                                strikeParamemter={strikeParamemter}
+                            /> :
+                            Type === "Premium Range" ?
+                                <PremiumRangeCard
+                                    id={id}
+                                    handleItems={handleItems}
+                                    strikeParamemter={strikeParamemter}
+                                /> :
+                                Type === "Closest Premium" ?
+                                    <ClosestPremiumCard
+                                        id={id}
+                                        handleItems={handleItems}
+                                        strikeParamemter={strikeParamemter}
+                                    /> :
+                                    Type === "Straddle Width" ?
+                                        <StraddleWidthCard
+                                            id={id}
+                                            handleItems={handleItems} 
+                                            strikeParamemter={strikeParamemter}
+                                        />
+                                        : ""
 
-                    <StrikesTypes />
-
-                    {/* -------------------------------------------------------------------------------------------------
-                                           //! if  Preimum Range select after an event
-                    -----------------------------------------------------------------------------------------------------*/}
-
-                    <PremiumRangeCard />
-
-                    {/* -------------------------------------------------------------------------------------------------
-                                           //! if Closest Preimum select after an event
-                    -----------------------------------------------------------------------------------------------------*/}
-
-                    <ClosestPremiumCard />
-
-                    {/* -------------------------------------------------------------------------------------------------
-                                           //! if Straddle Width select after an event     
-                    -----------------------------------------------------------------------------------------------------*/}
-
-                    <StraddleWidthCard />
+                    }
 
                 </div>
 
@@ -75,17 +111,20 @@ const LegCard = ( { id , handleDelete } ) => {
 
 
                     <div className="border-2 border-black m-2 p-5">
-                        <div className="flex items-center">
-                            <input type="checkbox" />
+                        <div className="flex items-center" >
+                            <input type="checkbox" name="legMomentumEnable" value={!!legMomentumEnable} onChange={(e)=>{handleItems(id,e)}} />
                             <h4 className="mx-2">Simple Momentum</h4>
                         </div>
-                        <div className="flex">
-
+                        <div className={`flex  ${!!legMomentumEnable ? "opacity-75" : "" }`} >
                             <select className="my-2 bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="postion" value="ATM">
-                                <option value="Strike Type">Strike Type</option>
-                                <option value="Premium Range">Premium Range</option>
-                                <option value="Closest Premium">Closest Premium</option>
-                                <option value="Straddle Width">Straddle Width</option>
+                                <option value="Points">Points &uarr;</option>
+                                <option value="Points">Points &darr;</option>
+                                <option value="Premium Range">Premium Range  &uarr;</option>
+                                <option value="Premium Range">Premium Range  &darr;</option>
+                                <option value="Closest Premium">Underlying Points &uarr;</option>
+                                <option value="Closest Premium">Underlying Points &darr;</option>
+                                <option value="Closest Premium">Underlying Points Premium &uarr;</option>
+                                <option value="Closest Premium">Underlying Points Premium &darr;</option>
                             </select>
                             <div>
                                 <input
@@ -105,7 +144,7 @@ const LegCard = ( { id , handleDelete } ) => {
                         <div className="flex">
 
                             <select className="my-2 bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="postion" value="ATM">
-                                <option value="Strike Type">Strike Type</option>
+                                <option value="Points ">Points  &uarr;</option>
                                 <option value="Premium Range">Premium Range</option>
                                 <option value="Closest Premium">Closest Premium</option>
                                 <option value="Straddle Width">Straddle Width</option>
@@ -127,7 +166,7 @@ const LegCard = ( { id , handleDelete } ) => {
                         <div className="flex">
 
                             <select className="my-2 bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="postion" value="ATM">
-                                <option value="Strike Type">Strike Type</option>
+                                <option value={`Points &uarr;`}>Strike Type</option>
                                 <option value="Premium Range">Premium Range</option>
                                 <option value="Closest Premium">Closest Premium</option>
                                 <option value="Straddle Width">Straddle Width</option>

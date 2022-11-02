@@ -1,10 +1,17 @@
 import { Fragment } from "react"
 
-const SelectStrikesCriteria = () => {
+const SelectStrikesCriteria = ({ id, handleItems, entryType, handleEntry  }) => {
+    // console.log(id,handleItems,entryType,"string")
     return (
         <Fragment>
             <h4 className="text-l font-bold">Selcted Strike</h4>
-            <select className="m-2 bg-[#375A9E] text-white text-xs font-semibold  border-x-4 border-[#375A9E] w-32 py-1 px-2 rounded-full" name="postion" value="Strike Type">
+            <select className="m-2 bg-[#375A9E] text-white text-xs font-semibold  border-x-4 border-[#375A9E] w-32 py-1 px-2 rounded-full" name="EntryType" value={entryType}
+            onChange={(e)=>{
+                handleItems(id,e)
+                handleEntry(e)
+                }
+            }
+            >
                 <option value="Strike Type">Strike Type</option>
                 <option value="Premium Range">Premium Range</option>
                 <option value="Closest Premium">Closest Premium</option>
