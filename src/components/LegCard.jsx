@@ -29,14 +29,26 @@ const LegCard = ({
 
     LegStopLossEnable,
     legStopLossType,
-    legStopLossValue
+    legStopLossValue,
 
-
+    legTrailSLEnable,
+    legTrailSLValue,
 
 }) => {
     // console.log(legMomentumType,legMomentumValue,legMomentumEnable,"now");
 
-    // console.log(strikeParamemter)
+    const handleTrailSl = (id, e) => {
+        let clone = { ...legTrailSLValue }
+        clone.Value[e.target.name] = +e.target.value
+        console.log(clone)
+        handleItems(id, { target: { name: "LegTrailSL", value: { ...clone } } })
+    }
+
+    const handleType = ( id, e ) => {
+        let clone = { ...legTrailSLValue };
+        clone.Type = e.target.value
+        handleItems(id,{target:{name:"LegTrailSL", value:{...clone}}})
+    }
 
     const [Type, setType] = useState(entryType)
     const handleEntry = ({ target }) => {
@@ -211,39 +223,36 @@ const LegCard = ({
                         </div>
                     </div>
 
-
-
                     <div className="border-2 border-black m-2 p-5">
                         <div className="flex items-center" >
-                            <input type="checkbox" name="legMomentumEnable" value={!!legMomentumEnable} onChange={(e) => { handleItems(id, e) }} />
+                            <input type="checkbox" name="LegTrailSLEnable" value={!!legTrailSLEnable} onChange={(e) => { handleItems(id, e) }} />
                             <h4 className="mx-2">Trail SL</h4>
                         </div>
-                        <div className={`flex  ${!legMomentumEnable ? "opacity-75" : ""}`} >
+                        <div className={`flex  ${!legTrailSLEnable ? "opacity-75" : ""}`} >
                             <select
-                                disabled={!legMomentumEnable}
-                                className="my-2  bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="LegMomentum" value={legMomentumType}
-                                onChange={(e) => handleItems(id, e)}
+                                disabled={!legTrailSLEnable}
+                                className="my-2  bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="LegTrailSL" value={legTrailSLValue.Type}
+                                onChange={(e) => handleType(id, e)}
                             >
                                 <option value="Points">Points</option>
-                               
                                 <option value="Premium">Premium</option>
-                                
+
                             </select>
                             <div>
                                 <input
-                                    disabled={!legMomentumEnable}
+                                    disabled={!legTrailSLEnable}
                                     className="text-sm m-3  rounded-full border-4 border-white  h-5 w-20"
-                                    type="number" min="0" value={legMomentumValue}
-                                    name="LegMomentum"
-                                    onChange={(e) => handleItems(id, e)} />
+                                    type="number" min="0" data-k="InstrumetntMove" value={legTrailSLValue.Value.instrumentMove}
+                                    name="InstrumentMove"
+                                    onChange={(e) => handleTrailSl(id, e)} />
                             </div>
                             <div>
                                 <input
-                                    disabled={!legMomentumEnable}
+                                    disabled={!legTrailSLEnable}
                                     className="text-sm m-3  rounded-full border-4 border-white  h-5 w-20"
-                                    type="number" min="0" value={legMomentumValue}
-                                    name="LegMomentum"
-                                    onChange={(e) => handleItems(id, e)} />
+                                    type="number" min="0" value={legTrailSLValue.Value.StopLossMove}
+                                    name="StopLossMove"
+                                    onChange={(e) => handleTrailSl(id, e)} />
                             </div>
                         </div>
                     </div>

@@ -1,6 +1,6 @@
-const StrikesTypes = () => {
+const StrikesTypes = ({strikeParameter, id, handleItems}) => {
     return (
-        <select className="my-2 bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="postion" value="ATM">
+        <select className="my-2 bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="StrikeParameter" value={strikeParameter} onChange={(e)=>handleItems(id,e)}>
             <option value="ATM" >ATM</option>
             <Option val={"IMT"} />
             <Option val={"OTM"} />

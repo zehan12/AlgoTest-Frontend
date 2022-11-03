@@ -165,19 +165,29 @@ const Legs = () => {
         } else {
             let itemUpdatedClone = legItems.map(item => {
                 if (item.id === id) {
-                    if (item[name].hasOwnProperty("Type") && target.type === "select-one") {
-                        console.log("tyoe")
-                        item[name].Type = value
-                    } else if (item[name].hasOwnProperty("Value") && target.type === "number") {
-                        if ( item[name].Value.hasOwnProperty("InstrumentMove") ) {
-                            console.log("yep")
-                        } else {
-                            console.log("nope")
-                        }
-                        item[name].Value = value
-                    } else {
-                        item[name] = value
-                    }
+                //     if (item[name].hasOwnProperty("Type") && target.type === "select-one") {
+                //         console.log("type")
+                //         item[name].Type = value
+                //     } else if (item[name].hasOwnProperty("Value") && target.type === "number") {
+
+                //         if ( item[name].Value.hasOwnProperty("InstrumentMove") ) {
+
+                //             console.log(target.dataset,"clicck",target)
+                //             if ( target.dataset.name = "InstrumentMove" ) {
+                //                 console.log("instr")
+                                // item[name].Value[target.dataset.name] = value;
+                //             } else {
+                //               console.log(target)
+                //             }
+                //             console.log("yep",target.dataset)
+                //         } else {
+                //             console.log("nope")
+                //         }
+                             // item[name].Value = value
+                //     } else {
+                //         item[name] = value
+                //     }
+                  item[name] = value
                 }
                 return { ...item }
             })

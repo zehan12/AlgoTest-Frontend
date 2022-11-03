@@ -28,8 +28,19 @@ const LegList = ({ legItems, handleDelete, handleItems }) => {
                 legStopLossType={leg.LegStopLoss.Type}
                 legStopLossValue={leg.LegStopLoss.Value}
 
-                
 
+                legTrailSLEnable={leg.LegTrailSLEnable}
+                legTrailSLValue={leg.LegTrailSL}
+                // legTrailSLValue={leg.LegTrailSL.Value}
+
+
+                // legReentryTPEnable={leg.LegReentryTPEnable}
+                // legReentryTPType={leg.LegReentryTP.Type}
+                // legReentryTPValue={leg.legReentryTP.Value}
+
+                // legReentrySLEnable={leg.LegReentrySLEnable}
+                // legReentrySLType={leg.LegReentryTP.Type}
+                // legReentrySLValue={leg.LegReentry.Value}
 
 
                 key={leg.id}
