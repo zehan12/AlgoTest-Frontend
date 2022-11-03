@@ -16,31 +16,25 @@ const LegList = ({ legItems, handleDelete, handleItems }) => {
                 entryType={leg.EntryType}
                 strikeParamemter={leg.StrikeParameter}
 
-                legMomentumEnable={leg.legMomentumEnable}
-                legMomentumType={leg.LegMomentum.Type}
-                legMomentumValue={leg.LegMomentum.Value}
+                legMomentumEnable={leg.LegMomentumEnable}
+                legMomentumValue={leg.LegMomentum}
 
                 legTargetEnable={leg.LegTargetEnable}
-                legTargetType={leg.LegTarget.Type}
-                legTargetValue={leg.LegTarget.Value}
+                legTargetValue={leg.LegTarget}
 
-                LegStopLossEnable={leg.LegStopLossEnable}
-                legStopLossType={leg.LegStopLoss.Type}
-                legStopLossValue={leg.LegStopLoss.Value}
+                legStopLossEnable={leg.LegStopLossEnable}
+                legStopLossValue={leg.LegStopLoss}
 
 
                 legTrailSLEnable={leg.LegTrailSLEnable}
                 legTrailSLValue={leg.LegTrailSL}
-                // legTrailSLValue={leg.LegTrailSL.Value}
 
 
-                // legReentryTPEnable={leg.LegReentryTPEnable}
-                // legReentryTPType={leg.LegReentryTP.Type}
-                // legReentryTPValue={leg.legReentryTP.Value}
+                legReentryTPEnable={leg.LegReentryTPEnable}
+                legReentryTPValue={leg.LegReentryTP}
 
-                // legReentrySLEnable={leg.LegReentrySLEnable}
-                // legReentrySLType={leg.LegReentryTP.Type}
-                // legReentrySLValue={leg.LegReentry.Value}
+                legReentrySLEnable={leg.LegReentrySLEnable}
+                legReentrySLValue={leg.LegReentrySL}
 
 
                 key={leg.id}

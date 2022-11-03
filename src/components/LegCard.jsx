@@ -19,23 +19,28 @@ const LegCard = ({
     strikeParamemter,
 
     legMomentumEnable,
-    legMomentumType,
     legMomentumValue,
 
 
     legTargetEnable,
-    legTargetType,
     legTargetValue,
 
-    LegStopLossEnable,
-    legStopLossType,
+    legStopLossEnable,
     legStopLossValue,
 
     legTrailSLEnable,
     legTrailSLValue,
 
+    legReentryTPEnable,
+    legReentryTPValue,
+
+    legReentrySLEnable,
+    legReentrySLValue,
+
 }) => {
-    // console.log(legMomentumType,legMomentumValue,legMomentumEnable,"now");
+    // console.log(legMomentumType,legMomentumValue,legMomentumEnable,"now");\
+
+    console.log(legMomentumValue, "leg", legTrailSLValue)
 
     const handleTrailSl = (id, e) => {
         let clone = { ...legTrailSLValue }
@@ -44,10 +49,23 @@ const LegCard = ({
         handleItems(id, { target: { name: "LegTrailSL", value: { ...clone } } })
     }
 
-    const handleType = ( id, e ) => {
+    const handleType = (id, e, targetObj) => {
+        console.log(targetObj, e.target.name, "my function call")
         let clone = { ...legTrailSLValue };
         clone.Type = e.target.value
-        handleItems(id,{target:{name:"LegTrailSL", value:{...clone}}})
+        handleItems(id, { target: { name: "LegTrailSL", value: { ...clone } } })
+    }
+
+    const handleTypes = (id, e, targetObj) => {
+        let clone = { ...targetObj };
+        clone.Type = e.target.value;
+        handleItems(id, { target: { name: e.target.name, value: { ...clone } } })
+    }
+
+    const handleValues = (id, e, targetObj) => {
+        let clone = { ...targetObj };
+        clone.Value = +e.target.value;
+        handleItems(id, { target: { name: e.target.name, value: { ...clone } } })
     }
 
     const [Type, setType] = useState(entryType)
@@ -136,31 +154,31 @@ const LegCard = ({
 
                     <div className="border-2 border-black m-2 p-5">
                         <div className="flex items-center" >
-                            <input type="checkbox" name="legMomentumEnable" value={!!legMomentumEnable} onChange={(e) => { handleItems(id, e) }} />
+                            <input type="checkbox" name="LegMomentumEnable" value={!!legMomentumEnable} onChange={(e) => { handleItems(id, e) }} />
                             <h4 className="mx-2">Simple Momentum</h4>
                         </div>
                         <div className={`flex  ${!legMomentumEnable ? "opacity-75" : ""}`} >
                             <select
                                 disabled={!legMomentumEnable}
-                                className="my-2  bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="LegMomentum" value={legMomentumType}
-                                onChange={(e) => handleItems(id, e)}
+                                className="my-2  bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="LegMomentum" value={legMomentumValue.Type}
+                                onChange={(e) => handleTypes(id, e, legMomentumValue)}
                             >
-                                <option value="Points up">Points &uarr;</option>
-                                <option value="Points down">Points &darr;</option>
-                                <option value="Premium Range up">Premium Range  &uarr;</option>
-                                <option value="Premium Range down">Premium Range  &darr;</option>
-                                <option value="Underlying Points up">Underlying Points &uarr;</option>
-                                <option value="Underlying Points down">Underlying Points &darr;</option>
-                                <option value="Underlying Points Premium up">Underlying Points Premium &uarr;</option>
-                                <option value="Underlying Points Premium down">Underlying Points Premium &darr;</option>
+                                <option value="PointsUp">Points &uarr;</option>
+                                <option value="PointsDown">Points &darr;</option>
+                                <option value="PremiumRangeUp">Premium Range  &uarr;</option>
+                                <option value="PremiumRangeDown">Premium Range  &darr;</option>
+                                <option value="UnderlyingPointsUp">Underlying Points &uarr;</option>
+                                <option value="UnderlyingPointsDown">Underlying Points &darr;</option>
+                                <option value="UnderlyingPointsPremiumUp">Underlying Points Premium &uarr;</option>
+                                <option value="UnderlyingPointsPremiumDown">Underlying Points Premium &darr;</option>
                             </select>
                             <div>
                                 <input
                                     disabled={!legMomentumEnable}
                                     className="text-sm m-3  rounded-full border-4 border-white  h-5 w-20"
-                                    type="number" min="0" value={legMomentumValue}
+                                    type="number" min="0" value={legMomentumValue.Value}
                                     name="LegMomentum"
-                                    onChange={(e) => handleItems(id, e)} />
+                                    onChange={(e) => handleValues(id, e, legMomentumValue)} />
                             </div>
                         </div>
                     </div>
@@ -169,27 +187,27 @@ const LegCard = ({
 
                     <div className="border-2 border-black m-2 p-5">
                         <div className="flex items-center" >
-                            <input type="checkbox" name="legTargetEnable" value={legTargetEnable} onChange={(e) => { handleItems(id, e) }} />
+                            <input type="checkbox" name="LegTargetEnable" value={!!legTargetEnable} onChange={(e) => { handleItems(id, e) }} />
                             <h4 className="mx-2">Target Profit</h4>
                         </div>
-                        <div className={`flex  ${legTargetEnable ? "opacity-75" : ""}`} >
+                        <div className={`flex  ${!legTargetEnable ? "opacity-75" : ""}`} >
                             <select
-                                disabled={legTargetEnable}
-                                className="my-2  bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="LegTarget" value={legTargetType}
-                                onChange={(e) => handleItems(id, e)}
+                                disabled={!legTargetEnable}
+                                className="my-2  bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="LegTarget" value={legTargetValue.Type}
+                                onChange={(e) => handleTypes(id, e, legTargetValue)}
                             >
                                 <option value="Points">Points</option>
-                                <option value="Underlying Points">Underlying Points</option>
+                                <option value="UnderlyingPoints">Underlying Points</option>
                                 <option value="Percentage">Precentage</option>
-                                <option value="Underlying Percentage">Underlying Precentage;</option>
+                                <option value="UnderlyingPercentage">Underlying Precentage;</option>
                             </select>
                             <div>
                                 <input
-                                    disabled={legTargetEnable}
+                                    disabled={!legTargetEnable}
                                     className="text-sm m-3  rounded-full border-4 border-white  h-5 w-20"
-                                    type="number" min="0" value={legTargetValue}
+                                    type="number" min="0" value={legTargetValue.Value}
                                     name="LegTarget"
-                                    onChange={(e) => handleItems(id, e)} />
+                                    onChange={(e) => handleValues(id, e, legTargetValue)} />
                             </div>
                         </div>
                     </div>
@@ -198,27 +216,27 @@ const LegCard = ({
 
                     <div className="border-2 border-black m-2 p-5">
                         <div className="flex items-center" >
-                            <input type="checkbox" name="LegStopLossEnable" value={!!LegStopLossEnable} onChange={(e) => { handleItems(id, e) }} />
+                            <input type="checkbox" name="LegStopLossEnable" value={!!legStopLossEnable} onChange={(e) => { handleItems(id, e) }} />
                             <h4 className="mx-2">Stop Loss</h4>
                         </div>
-                        <div className={`flex  ${!LegStopLossEnable ? "opacity-75" : ""}`} >
+                        <div className={`flex  ${!legStopLossEnable ? "opacity-75" : ""}`} >
                             <select
-                                disabled={!LegStopLossEnable}
-                                className="my-2  bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="LegStopLoss" value={legStopLossType}
-                                onChange={(e) => handleItems(id, e)}
+                                disabled={!legStopLossEnable}
+                                className="my-2  bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="LegStopLoss" value={legStopLossValue.Type}
+                                onChange={(e) => handleTypes(id, e, legStopLossValue)}
                             >
                                 <option value="Points">Points</option>
-                                <option value="Underlying Points">Underlying Points</option>
+                                <option value="UnderlyingPoints">Underlying Points</option>
                                 <option value="Percentage">Precentage</option>
-                                <option value="Underlying Percentage">Underlying Precentage;</option>
+                                <option value="UnderlyingPercentage">Underlying Precentage;</option>
                             </select>
                             <div>
                                 <input
-                                    disabled={!LegStopLossEnable}
+                                    disabled={!legStopLossEnable}
                                     className="text-sm m-3  rounded-full border-4 border-white  h-5 w-20"
-                                    type="number" min="0" value={legStopLossValue}
+                                    type="number" min="0" value={legStopLossValue.Value}
                                     name="LegStopLoss"
-                                    onChange={(e) => handleItems(id, e)} />
+                                    onChange={(e) => handleValues(id, e, legStopLossValue)} />
                             </div>
                         </div>
                     </div>
@@ -242,7 +260,7 @@ const LegCard = ({
                                 <input
                                     disabled={!legTrailSLEnable}
                                     className="text-sm m-3  rounded-full border-4 border-white  h-5 w-20"
-                                    type="number" min="0" data-k="InstrumetntMove" value={legTrailSLValue.Value.instrumentMove}
+                                    type="number" min="0" value={legTrailSLValue.Value.instrumentMove}
                                     name="InstrumentMove"
                                     onChange={(e) => handleTrailSl(id, e)} />
                             </div>
@@ -258,23 +276,32 @@ const LegCard = ({
                     </div>
 
 
+
                     <div className="border-2 border-black m-2 p-5">
-                        <div className="flex items-center">
-                            <input type="checkbox" />
+                        <div className="flex items-center" >
+                            <input type="checkbox" name="LegReentryTPEnable" value={!!legReentryTPEnable} onChange={(e) => { handleItems(id, e) }} />
                             <h4 className="mx-2">Re-entry on Tgt</h4>
                         </div>
-                        <div className="flex">
-
-                            <select className="my-2 bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="postion" value="ATM">
-                                <option value="Strike Type">Strike Type</option>
-                                <option value="Premium Range">Premium Range</option>
-                                <option value="Closest Premium">Closest Premium</option>
-                                <option value="Straddle Width">Straddle Width</option>
+                        <div className={`flex  ${!legReentryTPEnable ? "opacity-75" : ""}`} >
+                            <select
+                                disabled={!legReentryTPEnable}
+                                className="my-2  bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="LegReentryTP" value={legReentryTPValue.Type}
+                                onChange={(e) => handleTypes(id, e, legReentryTPValue)}
+                            >
+                                <option value="ASAP">RE ASAP</option>
+                                <option value="ASAPReverse">RE ASAP </option>
+                                <option value="Momentum">RE MOMENTUM</option>
+                                <option value="MomentumReverse">RE MOMENTUM</option>
+                                <option value="COST">RE COST</option>
+                                <option value="COSTReverse">RE COST </option>
                             </select>
                             <div>
                                 <input
-                                    className="text-sm m-3  rounded-full border-x-4 border-white  h-5 w-20"
-                                    type="number" min="0" value="0" />
+                                    disabled={!legReentryTPEnable}
+                                    className="text-sm m-3  rounded-full border-4 border-white  h-5 w-20"
+                                    type="number" min="0" value={legReentryTPValue.Value}
+                                    name="LegReentryTP"
+                                    onChange={(e) => handleValues(id, e, legReentryTPValue)} />
                             </div>
                         </div>
                     </div>
@@ -285,21 +312,32 @@ const LegCard = ({
                 <div className="flex justify-center">
                     <div className="border-2 border-black m-2 p-5">
                         <div className="flex items-center">
-                            <input type="checkbox" />
+                            <input type="checkbox" name="LegReentrySLEnable" value={!!legReentrySLEnable} onChange={(e) => { handleItems(id, e) }} />
                             <h4 className="mx-2">Re-entry on SL</h4>
                         </div>
-                        <div className="flex">
+                        <div className={`flex  ${!legReentrySLEnable} ? "opacity-75" : ""}`} >
 
-                            <select className="my-2 bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="postion" value="ATM">
-                                <option value="Strike Type">Strike Type</option>
-                                <option value="Premium Range">Premium Range</option>
-                                <option value="Closest Premium">Closest Premium</option>
-                                <option value="Straddle Width">Straddle Width</option>
+                            <select
+                                disabled={!legReentrySLEnable}
+                                className="my-2 bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full"  value={legReentrySLValue.Type}
+                                name="LegReentrySL"
+                                onChange={(e)=>handleTypes(id,e,legReentrySLValue)}
+                                >
+                                <option value="ASAP">RE ASAP</option>
+                                <option value="ASAPReverse">RE ASAP </option>
+                                <option value="Momentum">RE MOMENTUM</option>
+                                <option value="MomentumReverse">RE MOMENTUM</option>
+                                <option value="COST">RE COST</option>
+                                <option value="COSTReverse">RE COST </option>
                             </select>
                             <div>
                                 <input
+                                    disabled={!legReentrySLEnable}
                                     className="text-sm m-3  px-3 rounded-full borderbo-4 border-white  h-5 w-20"
-                                    type="number" min="0" value="0" />
+                                    type="number" min="0" value={legReentrySLValue.Value}
+                                    name="LegReentrySL"
+                                    onChange={(e)=>handleValues(id,e,legReentrySLValue)}
+                                    />
                             </div>
                         </div>
                     </div>
