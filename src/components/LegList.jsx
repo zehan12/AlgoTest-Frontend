@@ -14,10 +14,24 @@ const LegList = ({ legItems, handleDelete, handleItems }) => {
                 instrumentKind={leg.InstrumentKind}
                 expiryKind={leg.ExpiryKind}
                 entryType={leg.EntryType}
-                strikeParamemter={leg.StrikeParameter}      
+                strikeParamemter={leg.StrikeParameter}
+
+                legMomentumEnable={leg.legMomentumEnable}
+                legMomentumType={leg.LegMomentum.Type}
+                legMomentumValue={leg.LegMomentum.Value}
+
+                legTargetEnable={leg.LegTargetEnable}
+                legTargetType={leg.LegTarget.Type}
+                legTargetValue={leg.LegTarget.Value}
+
+                LegStopLossEnable={leg.LegStopLossEnable}
+                legStopLossType={leg.LegStopLoss.Type}
+                legStopLossValue={leg.LegStopLoss.Value}
+
                 
-                legMomentumEnable={!!leg.legMomentumEnable}
-                
+
+
+
                 key={leg.id}
                 id={leg.id}
                 handleDelete={handleDelete}

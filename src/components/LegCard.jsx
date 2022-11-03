@@ -18,11 +18,23 @@ const LegCard = ({
     entryType,
     strikeParamemter,
 
-    legMomentumEnable
+    legMomentumEnable,
+    legMomentumType,
+    legMomentumValue,
+
+
+    legTargetEnable,
+    legTargetType,
+    legTargetValue,
+
+    LegStopLossEnable,
+    legStopLossType,
+    legStopLossValue
+
 
 
 }) => {
-    console.log(legMomentumEnable,"inside legCard", typeof legMomentumEnable);
+    // console.log(legMomentumType,legMomentumValue,legMomentumEnable,"now");
 
     // console.log(strikeParamemter)
 
@@ -56,12 +68,12 @@ const LegCard = ({
                     {/* -------------------------------------------------------------------------------------------------
                                            //! if any option selected
                     -----------------------------------------------------------------------------------------------------*/}
-                    <select className="m-2 bg-[#375A9E] text-white text-xs font-semibold  border-x-4 border-[#375A9E] w-18 py-1 px-2 rounded-full" name="ExpiryKind" value={expiryKind} onChange={(e)=>handleItems(id,e)}>
+                    <select className="m-2 bg-[#375A9E] text-white text-xs font-semibold  border-x-4 border-[#375A9E] w-18 py-1 px-2 rounded-full" name="ExpiryKind" value={expiryKind} onChange={(e) => handleItems(id, e)}>
                         <option value="Weekly">Weekly</option>
                         <option value="Monthly">Monthly</option>
                     </select>
 
-                    <select className="m-2 bg-[#375A9E] text-white text-xs font-semibold  border-x-4 border-[#375A9E] w-18 py-1 px-2 rounded-full" name="InstrumentKind" value={instrumentKind} onChange={(e)=>handleItems(id,e)}>
+                    <select className="m-2 bg-[#375A9E] text-white text-xs font-semibold  border-x-4 border-[#375A9E] w-18 py-1 px-2 rounded-full" name="InstrumentKind" value={instrumentKind} onChange={(e) => handleItems(id, e)}>
                         <option value="Call">Call</option>
                         <option value="Buy">Buy</option>
                     </select>
@@ -96,7 +108,7 @@ const LegCard = ({
                                     Type === "Straddle Width" ?
                                         <StraddleWidthCard
                                             id={id}
-                                            handleItems={handleItems} 
+                                            handleItems={handleItems}
                                             strikeParamemter={strikeParamemter}
                                         />
                                         : ""
@@ -112,24 +124,31 @@ const LegCard = ({
 
                     <div className="border-2 border-black m-2 p-5">
                         <div className="flex items-center" >
-                            <input type="checkbox" name="legMomentumEnable" value={!!legMomentumEnable} onChange={(e)=>{handleItems(id,e)}} />
+                            <input type="checkbox" name="legMomentumEnable" value={!!legMomentumEnable} onChange={(e) => { handleItems(id, e) }} />
                             <h4 className="mx-2">Simple Momentum</h4>
                         </div>
-                        <div className={`flex  ${!!legMomentumEnable ? "opacity-75" : "" }`} >
-                            <select className="my-2 bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="postion" value="ATM">
-                                <option value="Points">Points &uarr;</option>
-                                <option value="Points">Points &darr;</option>
-                                <option value="Premium Range">Premium Range  &uarr;</option>
-                                <option value="Premium Range">Premium Range  &darr;</option>
-                                <option value="Closest Premium">Underlying Points &uarr;</option>
-                                <option value="Closest Premium">Underlying Points &darr;</option>
-                                <option value="Closest Premium">Underlying Points Premium &uarr;</option>
-                                <option value="Closest Premium">Underlying Points Premium &darr;</option>
+                        <div className={`flex  ${!legMomentumEnable ? "opacity-75" : ""}`} >
+                            <select
+                                disabled={!legMomentumEnable}
+                                className="my-2  bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="LegMomentum" value={legMomentumType}
+                                onChange={(e) => handleItems(id, e)}
+                            >
+                                <option value="Points up">Points &uarr;</option>
+                                <option value="Points down">Points &darr;</option>
+                                <option value="Premium Range up">Premium Range  &uarr;</option>
+                                <option value="Premium Range down">Premium Range  &darr;</option>
+                                <option value="Underlying Points up">Underlying Points &uarr;</option>
+                                <option value="Underlying Points down">Underlying Points &darr;</option>
+                                <option value="Underlying Points Premium up">Underlying Points Premium &uarr;</option>
+                                <option value="Underlying Points Premium down">Underlying Points Premium &darr;</option>
                             </select>
                             <div>
                                 <input
+                                    disabled={!legMomentumEnable}
                                     className="text-sm m-3  rounded-full border-4 border-white  h-5 w-20"
-                                    type="number" min="0" value="0" />
+                                    type="number" min="0" value={legMomentumValue}
+                                    name="LegMomentum"
+                                    onChange={(e) => handleItems(id, e)} />
                             </div>
                         </div>
                     </div>
@@ -137,71 +156,94 @@ const LegCard = ({
 
 
                     <div className="border-2 border-black m-2 p-5">
-                        <div className="flex items-center">
-                            <input type="checkbox" />
+                        <div className="flex items-center" >
+                            <input type="checkbox" name="legTargetEnable" value={legTargetEnable} onChange={(e) => { handleItems(id, e) }} />
                             <h4 className="mx-2">Target Profit</h4>
                         </div>
-                        <div className="flex">
-
-                            <select className="my-2 bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="postion" value="ATM">
-                                <option value="Points ">Points  &uarr;</option>
-                                <option value="Premium Range">Premium Range</option>
-                                <option value="Closest Premium">Closest Premium</option>
-                                <option value="Straddle Width">Straddle Width</option>
+                        <div className={`flex  ${legTargetEnable ? "opacity-75" : ""}`} >
+                            <select
+                                disabled={legTargetEnable}
+                                className="my-2  bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="LegTarget" value={legTargetType}
+                                onChange={(e) => handleItems(id, e)}
+                            >
+                                <option value="Points">Points</option>
+                                <option value="Underlying Points">Underlying Points</option>
+                                <option value="Percentage">Precentage</option>
+                                <option value="Underlying Percentage">Underlying Precentage;</option>
                             </select>
                             <div>
                                 <input
-                                    className="text-sm m-3  rounded-full border-x-4 border-white  h-5 w-20"
-                                    type="number" min="0" value="0" />
+                                    disabled={legTargetEnable}
+                                    className="text-sm m-3  rounded-full border-4 border-white  h-5 w-20"
+                                    type="number" min="0" value={legTargetValue}
+                                    name="LegTarget"
+                                    onChange={(e) => handleItems(id, e)} />
                             </div>
                         </div>
                     </div>
 
 
+
                     <div className="border-2 border-black m-2 p-5">
-                        <div className="flex items-center">
-                            <input type="checkbox" />
+                        <div className="flex items-center" >
+                            <input type="checkbox" name="LegStopLossEnable" value={!!LegStopLossEnable} onChange={(e) => { handleItems(id, e) }} />
                             <h4 className="mx-2">Stop Loss</h4>
                         </div>
-                        <div className="flex">
-
-                            <select className="my-2 bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="postion" value="ATM">
-                                <option value={`Points &uarr;`}>Strike Type</option>
-                                <option value="Premium Range">Premium Range</option>
-                                <option value="Closest Premium">Closest Premium</option>
-                                <option value="Straddle Width">Straddle Width</option>
+                        <div className={`flex  ${!LegStopLossEnable ? "opacity-75" : ""}`} >
+                            <select
+                                disabled={!LegStopLossEnable}
+                                className="my-2  bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="LegStopLoss" value={legStopLossType}
+                                onChange={(e) => handleItems(id, e)}
+                            >
+                                <option value="Points">Points</option>
+                                <option value="Underlying Points">Underlying Points</option>
+                                <option value="Percentage">Precentage</option>
+                                <option value="Underlying Percentage">Underlying Precentage;</option>
                             </select>
                             <div>
                                 <input
-                                    className="text-sm m-3  rounded-full border-x-4 border-white  h-5 w-20"
-                                    type="number" min="0" value="0" />
+                                    disabled={!LegStopLossEnable}
+                                    className="text-sm m-3  rounded-full border-4 border-white  h-5 w-20"
+                                    type="number" min="0" value={legStopLossValue}
+                                    name="LegStopLoss"
+                                    onChange={(e) => handleItems(id, e)} />
                             </div>
                         </div>
                     </div>
 
 
+
                     <div className="border-2 border-black m-2 p-5">
-                        <div className="flex items-center">
-                            <input type="checkbox" />
+                        <div className="flex items-center" >
+                            <input type="checkbox" name="legMomentumEnable" value={!!legMomentumEnable} onChange={(e) => { handleItems(id, e) }} />
                             <h4 className="mx-2">Trail SL</h4>
                         </div>
-                        <div className="flex">
-
-                            <select className="my-2 bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="postion" value="ATM">
-                                <option value="Strike Type">Strike Type</option>
-                                <option value="Premium Range">Premium Range</option>
-                                <option value="Closest Premium">Closest Premium</option>
-                                <option value="Straddle Width">Straddle Width</option>
+                        <div className={`flex  ${!legMomentumEnable ? "opacity-75" : ""}`} >
+                            <select
+                                disabled={!legMomentumEnable}
+                                className="my-2  bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="LegMomentum" value={legMomentumType}
+                                onChange={(e) => handleItems(id, e)}
+                            >
+                                <option value="Points">Points</option>
+                               
+                                <option value="Premium">Premium</option>
+                                
                             </select>
                             <div>
                                 <input
-                                    className="text-sm m-3  rounded-full border-x-4 border-white  h-5 w-20"
-                                    type="number" min="0" value="0" />
+                                    disabled={!legMomentumEnable}
+                                    className="text-sm m-3  rounded-full border-4 border-white  h-5 w-20"
+                                    type="number" min="0" value={legMomentumValue}
+                                    name="LegMomentum"
+                                    onChange={(e) => handleItems(id, e)} />
                             </div>
                             <div>
                                 <input
-                                    className="text-sm m-3  px-3 rounded-full borderbo-4 border-white  h-5 w-20"
-                                    type="number" min="0" value="0" />
+                                    disabled={!legMomentumEnable}
+                                    className="text-sm m-3  rounded-full border-4 border-white  h-5 w-20"
+                                    type="number" min="0" value={legMomentumValue}
+                                    name="LegMomentum"
+                                    onChange={(e) => handleItems(id, e)} />
                             </div>
                         </div>
                     </div>

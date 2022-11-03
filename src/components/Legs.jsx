@@ -84,7 +84,7 @@ const Legs = () => {
 
             LegStopLoss: {
                 Type: "None",
-                value: 0,
+                Value: 0,
             },
 
             legTargetEnable: false,
@@ -150,10 +150,13 @@ const Legs = () => {
     }
 
     const handleItems = (id, { target }) => {
-        const { name, value } = target
+        const { name, value } = target;
+        console.log(name, value, target.type)
         if (target.type === "checkbox" && target.checked !== undefined) {
+            console.log("heler")
             let toggleEnables = legItems.map(item => {
                 if (item.id === id) {
+                    console.log("val",item[name])
                     item[name] = !!target.checked;
                 }
                 return { ...item }
@@ -162,7 +165,19 @@ const Legs = () => {
         } else {
             let itemUpdatedClone = legItems.map(item => {
                 if (item.id === id) {
-                    item[name] = value;
+                    if (item[name].hasOwnProperty("Type") && target.type === "select-one") {
+                        console.log("tyoe")
+                        item[name].Type = value
+                    } else if (item[name].hasOwnProperty("Value") && target.type === "number") {
+                        if ( item[name].Value.hasOwnProperty("InstrumentMove") ) {
+                            console.log("yep")
+                        } else {
+                            console.log("nope")
+                        }
+                        item[name].Value = value
+                    } else {
+                        item[name] = value
+                    }
                 }
                 return { ...item }
             })
