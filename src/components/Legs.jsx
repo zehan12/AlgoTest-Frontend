@@ -1,9 +1,42 @@
 import { Fragment, useState, useEffect } from "react"
-import LegCard from "./LegCard";
 import LegList from "./LegList";
 import Segment from "./Segment";
 
+import { db } from "../firebase";
+import {
+    collection,
+    getDocs,
+    addDoc,
+    updateDoc,
+    deleteDoc,
+    doc,
+} from "firebase/firestore";
+
+
+
 const Legs = () => {
+
+
+    const legsCollectionRef = collection(db, "legs");
+
+    useEffect(() => {
+
+        const fetchBlogs = async () => {
+
+        }
+
+        fetchBlogs()
+        fetchData()
+    }, [])
+
+
+    const fetchData = async () => {
+        const res = await fetch("https://algotest-61f5c-default-rtdb.asia-southeast1.firebasedatabase.app/legs.json");
+
+        const data = await res.json();
+        console.log(data, "from fetch fuction")
+    }
+
     const handleClick = () => {
         setLegAdd(!legAdd);
     }
@@ -68,7 +101,7 @@ const Legs = () => {
         else if (name === "multiplier") setMultiplier(value);
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         let StrikeParameter = strike === "Strike Type" ? strikeType :
             strike === "Premium Range" ? { Lower: lower, Upper: upper } :
@@ -134,6 +167,78 @@ const Legs = () => {
         }
         setLegItems([...legItems, legData]);
 
+
+        const res = await addDoc(legsCollectionRef, {
+            id: Date.now(),
+            PositionType: position,
+            Lots: totalLeg,
+
+            LegStopLossEnable: false,
+
+            LegStopLoss: {
+                Type: "None",
+                Value: 0,
+            },
+
+            LegTargetEnable: false,
+
+            LegTarget: {
+                Type: "None",
+                Value: 0,
+            },
+
+            LegTrailSLEnable: false,
+
+            LegTrailSL: {
+                Type: "None",
+                Value: {
+                    InstrumentMove: 0,
+                    StopLossMove: 0,
+                }
+            },
+
+            LegMomentumEnable: false,
+
+            LegMomentum: {
+                Type: "None",
+                Value: 0
+            },
+            ExpiryKind: expiry,
+            EntryType: strike,
+
+
+            StrikeParameter,
+
+            InstrumentKind: optionType,
+
+            LegReentrySLEnable: false,
+
+            LegReentrySL: {
+                Type: "None",
+                Value: 1
+            },
+
+            LegReentryTPEnable: false,
+
+            LegReentryTP: {
+                Type: "None",
+                Value: 1
+            }
+        });
+
+
+
+        console.log(res, "response what i want")
+
+        // const res = await fetch("https://algotest-61f5c-default-rtdb.asia-southeast1.firebasedatabase.app/legs.json",
+        //     {
+        //         method: "POST",
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //         },
+        //         body: JSON.stringify(legData)
+        //     }
+        // );
     }
 
     useEffect(() => {
@@ -157,7 +262,7 @@ const Legs = () => {
             console.log("heler")
             let toggleEnables = legItems.map(item => {
                 if (item.id === id) {
-                    console.log("val",item[name])
+                    console.log("val", item[name])
                     item[name] = !!target.checked;
                 }
                 return { ...item }
@@ -166,7 +271,7 @@ const Legs = () => {
         } else {
             let itemUpdatedClone = legItems.map(item => {
                 if (item.id === id) {
-                  item[name] = value
+                    item[name] = value
                 }
                 return { ...item }
             })
