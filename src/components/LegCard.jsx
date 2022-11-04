@@ -38,9 +38,8 @@ const LegCard = ({
     legReentrySLValue,
 
 }) => {
-    // console.log(legMomentumType,legMomentumValue,legMomentumEnable,"now");\
 
-    console.log(legMomentumValue, "leg", legTrailSLValue)
+    console.log(strikeParamemter)
 
     const handleTrailSl = (id, e) => {
         let clone = { ...legTrailSLValue }
@@ -69,10 +68,37 @@ const LegCard = ({
     }
 
     const [Type, setType] = useState(entryType)
+
     const handleEntry = ({ target }) => {
         const { value } = target
         setType(value)
     }
+
+    const handleStrike = (id,value) => {
+        let val = { target: {name:"StrikeParameter", value: value } };
+        handleItems(id,val)
+    }
+
+    const handlePremiumRange = ( id, lower, upper ) => {
+        console.log(id, lower, upper)
+        let val = { target: { name:"StrikeParameter", value:{ Lower: lower, Upper: upper }} }
+        handleItems(id,val)
+    }
+
+    const handlePremium = (id, value) => {
+        let val = { target: {name:"StrikeParameter", value: { Premium: value } } };
+        handleItems(id,val)
+    }
+
+    const handleStraddle = (id, sign, value) => {
+        console.log(id, sign, value)
+        let val = { target: {name:"StrikeParameter", value:{ Adjustment: sign, Multiplier: value }}}
+        handleItems(id,val)
+    }
+
+
+
+
     return (
         <Fragment>
             <div onClick={() => handleDelete(id)} className="bg-red-600">{id}</div>
@@ -120,26 +146,26 @@ const LegCard = ({
                         Type === "Strike Type" ?
                             <StrikesTypes
                                 id={id}
-                                handleItems={handleItems}
+                                handleStrike={handleStrike}
                                 strikeParamemter={strikeParamemter}
                             /> :
                             Type === "Premium Range" ?
                                 <PremiumRangeCard
                                     id={id}
-                                    handleItems={handleItems}
+                                    handlePremiumRange={handlePremiumRange}
                                     strikeParamemter={strikeParamemter}
-                                /> :
+                                /> : 
                                 Type === "Closest Premium" ?
                                     <ClosestPremiumCard
                                         id={id}
-                                        handleItems={handleItems}
+                                        handlePremium={handlePremium}
                                         strikeParamemter={strikeParamemter}
                                     /> :
                                     Type === "Straddle Width" ?
                                         <StraddleWidthCard
                                             id={id}
-                                            handleItems={handleItems}
                                             strikeParamemter={strikeParamemter}
+                                            handleStraddle={handleStraddle}
                                         />
                                         : ""
 
