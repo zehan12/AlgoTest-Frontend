@@ -77,7 +77,7 @@ const Legs = () => {
 
         const legData = {
             id: Date.now(),
-            positionType: position,
+            PositionType: position,
             Lots: totalLeg,
 
             LegStopLossEnable: false,
