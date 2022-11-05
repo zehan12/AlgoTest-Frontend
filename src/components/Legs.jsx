@@ -12,6 +12,7 @@ import {
     doc,
 } from "firebase/firestore";
 import { toast } from "react-toastify";
+import Loading from "./Loading";
 
 
 
@@ -57,6 +58,8 @@ const Legs = () => {
     const [multiplier, setMultiplier] = useState(0.5);
     
 
+    const [ loading, setLoading ] = useState(false);
+
     const handleChange = ({ target }) => {
         const { name, value } = target
         // switch ( name ) {
@@ -79,6 +82,9 @@ const Legs = () => {
     }
 
     const handleSubmit = async (e) => {
+        
+        setLoading(true)
+
         e.preventDefault();
         let StrikeParameter = strike === "Strike Type" ? strikeType :
             strike === "Premium Range" ? { Lower: lower, Upper: upper } :
@@ -97,11 +103,9 @@ const Legs = () => {
             LegReentryTPEnable: false, LegReentryTP: { Type: "None", Value: 1 }
         });
 
-        if ( res ) {
-            console.log(res);
-        }
-        toast.success("leg Added")
 
+        toast.success("leg Added")
+        setLoading(false)
         // fetchLegs()
     }
 
@@ -110,9 +114,9 @@ const Legs = () => {
 
     const handleDelete = async(id) => {
         toast.success(`Leg ID:${id} is Deleted`)
-        // const legDoc = doc(db, "legs", id );
-        // await deleteDoc(legDoc);
-        // fetchLegs()
+        const legDoc = doc(db, "legs", id );
+        await deleteDoc(legDoc);
+        fetchLegs()
         // let itemUpdatedClone = legItems.filter(item => (item.id !== id))
         // setLegItems(itemUpdatedClone)
     }
@@ -180,25 +184,19 @@ const Legs = () => {
                         />
                         <div className="p-4 bg-[#F6F6F6]" >
                             <button className="px-14 py-1 bg-[#375A9E] text-white text-sm font-semibold rounded-full mr-2"
+                                disable={loading}
                                 onClick={(e) => handleSubmit(e)}
-                            >Add Leg</button>
-                            <button className="px-14 py-1 bg-white text-[#375A9E] text-sm font-semibold rounded-full ml-2"
+                            >{ loading === false ? <Loading text={"Adding Leg"} /> 
+                            : "Add Leg" }</button>
+                            <button 
+                            className="px-14 py-1 bg-white text-[#375A9E] text-sm font-semibold rounded-full ml-2"
                                 onClick={() => setLegAdd(false)}>Cancel</button>
                         </div>
                     </Fragment> : ""
                 }
             </div>
             <LegList
-                legItems={legItems || [ {
-                    createId: Date.now(), PositionType: position, Lots: totalLeg,
-                    ExpiryKind: expiry, EntryType: strike, StrikeParameter:"ATM", InstrumentKind: optionType,
-                    LegStopLossEnable: false, LegStopLoss: { Type: "None", Value: 0, },
-                    LegTargetEnable: false, LegTarget: { Type: "None", Value: 0, },
-                    LegTrailSLEnable: false, LegTrailSL: { Type: "None", Value: { InstrumentMove: 0, StopLossMove: 0, } },
-                    LegMomentumEnable: false, LegMomentum: { Type: "None", Value: 0 },
-                    LegReentrySLEnable: false, LegReentrySL: { Type: "None", Value: 1 },
-                    LegReentryTPEnable: false, LegReentryTP: { Type: "None", Value: 1 }
-                } ]}
+                legItems={legItems}
                 handleDelete={handleDelete}
                 handleItems={handleItems}
             />

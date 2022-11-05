@@ -7,7 +7,6 @@ const LegList = ({ legItems, handleDelete, handleItems }) => {
 
     return (
         <Fragment>
-            <h1>List && Store Here</h1>
             {legItems.map((leg) => <LegCard
                 Lots={leg.Lots}
                 positionType={leg.PositionType}
