@@ -106,7 +106,9 @@ const LegCard = ({
         <Fragment>
             <div className="bg-[#EFEFEF] rounded-md m-auto my-6 border-2 relative" style={{ width: "80%" }}>
             <div className="flex flex-col absolute top-0 right-0 h-16 w-16 ml-2 pl-12 ">      
-                <div className="p-2 bg-red-400 border rounded-full h-7 w-7 text-white">
+                <div 
+                onClick={() => handleDelete(id)}
+                className="p-2 bg-red-400 border rounded-full h-7 w-7 text-white">
                     <ImCross size={10}/>
                 </div>
                 <div className="mt-3 p-1 bg-white text-blue-300 border rounded-full h-7 w-7">

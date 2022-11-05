@@ -11,7 +11,7 @@ import {
     deleteDoc,
     doc,
 } from "firebase/firestore";
-import LegCard from "./LegCard";
+import { toast } from "react-toastify";
 
 
 
@@ -32,17 +32,10 @@ const Legs = () => {
 
     useEffect(() => {
 
-        // fetchLegs()
-        // fetchData()
+        fetchLegs()
+        toast.success("Legs Fetched")
     }, [])
 
-
-    // const fetchData = async () => {
-    //     const res = await fetch("https://algotest-61f5c-default-rtdb.asia-southeast1.firebasedatabase.app/legs.json");
-
-    //     const data = await res.json();
-    //     console.log(data, "from fetch fuction")
-    // }
 
     const handleClick = () => {
         setLegAdd(!legAdd);
@@ -62,26 +55,6 @@ const Legs = () => {
     const [premium, setPremium] = useState(50);
     const [plusMinus, setPlusMinus] = useState("+");
     const [multiplier, setMultiplier] = useState(0.5);
-
-    //? idea -------------------------
-    // const [leg, setLeg] = useState({
-    //     totalLeg: 1,
-    //     position: "Sell",
-    //     optionType: "Call",
-    //     expiry: "Weekly",
-    //     strike: "Strike Type",
-    //     strikeType: "ATM",
-    //     upper: 200,
-    //     lower: 50,
-    //     plusMinus: "+",
-    //     multiplier: 0.5
-    // });
-
-    // const [ legMomentumEnable, setLegMomentumEnable ] = useState(false);
-    // const [legTargetEnable, setLegTargetEnable] = useState(false);
-    // const [ legStopLossEnable, setLegStopLossEnable ] = useState(false);
-    // const [ leg ]
-
     
 
     const handleChange = ({ target }) => {
@@ -112,64 +85,6 @@ const Legs = () => {
                 strike === "Closest Premium" ? { Premium: premium } :
                     strike === "Straddle Width" ? { Adjustment: plusMinus, Multiplier: multiplier } : ""
 
-        const legData = {
-            id: Date.now(),
-            PositionType: position,
-            Lots: totalLeg,
-
-            LegStopLossEnable: false,
-
-            LegStopLoss: {
-                Type: "None",
-                Value: 0,
-            },
-
-            LegTargetEnable: false,
-
-            LegTarget: {
-                Type: "None",
-                Value: 0,
-            },
-
-            LegTrailSLEnable: false,
-
-            LegTrailSL: {
-                Type: "None",
-                Value: {
-                    InstrumentMove: 0,
-                    StopLossMove: 0,
-                }
-            },
-
-            LegMomentumEnable: false,
-
-            LegMomentum: {
-                Type: "None",
-                Value: 0
-            },
-            ExpiryKind: expiry,
-            EntryType: strike,
-
-
-            StrikeParameter,
-
-            InstrumentKind: optionType,
-
-            LegReentrySLEnable: false,
-
-            LegReentrySL: {
-                Type: "None",
-                Value: 1
-            },
-
-            LegReentryTPEnable: false,
-
-            LegReentryTP: {
-                Type: "None",
-                Value: 1
-            }
-        }
-
 
         const res = await addDoc(legsCollectionRef, {
             createId: Date.now(), PositionType: position, Lots: totalLeg,
@@ -182,35 +97,22 @@ const Legs = () => {
             LegReentryTPEnable: false, LegReentryTP: { Type: "None", Value: 1 }
         });
 
+        if ( res ) {
+            console.log(res);
+        }
+        toast.success("leg Added")
 
-        fetchLegs();
-
-        // const res = await fetch("https://algotest-61f5c-default-rtdb.asia-southeast1.firebasedatabase.app/legs.json",
-        //     {
-        //         method: "POST",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //         },
-        //         body: JSON.stringify(legData)
-        //     }
-        // );
+        // fetchLegs()
     }
 
-    // useEffect(() => {
-    //     storeLegToLocal()
-    // }, [legItems])
-
-    // const storeLegToLocal = () => {
-    //     const stringifyitems = JSON.stringify(legItems)
-    //     localStorage.setItem("LEG", stringifyitems)
-    // }
 
 
 
     const handleDelete = async(id) => {
-        const legDoc = doc(db, "legs", id );
-        await deleteDoc(legDoc);
-        fetchLegs()
+        toast.success(`Leg ID:${id} is Deleted`)
+        // const legDoc = doc(db, "legs", id );
+        // await deleteDoc(legDoc);
+        // fetchLegs()
         // let itemUpdatedClone = legItems.filter(item => (item.id !== id))
         // setLegItems(itemUpdatedClone)
     }
