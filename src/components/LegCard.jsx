@@ -4,6 +4,9 @@ import PremiumRangeCard from "./strikesOptions/PremiumRangeCard";
 import SelectStrikesCriteria from "./strikesOptions/SelectStrikesCriteria";
 import StraddleWidthCard from "./strikesOptions/StraddleWidthCard";
 import StrikesTypes from "./strikesOptions/StrikesTypes";
+import { FaRegCopy } from "react-icons/fa"
+import { ImCross } from "react-icons/im"
+
 
 
 
@@ -74,26 +77,26 @@ const LegCard = ({
         setType(value)
     }
 
-    const handleStrike = (id,value) => {
-        let val = { target: {name:"StrikeParameter", value: value } };
-        handleItems(id,val)
+    const handleStrike = (id, value) => {
+        let val = { target: { name: "StrikeParameter", value: value } };
+        handleItems(id, val)
     }
 
-    const handlePremiumRange = ( id, lower, upper ) => {
+    const handlePremiumRange = (id, lower, upper) => {
         console.log(id, lower, upper)
-        let val = { target: { name:"StrikeParameter", value:{ Lower: lower, Upper: upper }} }
-        handleItems(id,val)
+        let val = { target: { name: "StrikeParameter", value: { Lower: lower, Upper: upper } } }
+        handleItems(id, val)
     }
 
     const handlePremium = (id, value) => {
-        let val = { target: {name:"StrikeParameter", value: { Premium: value } } };
-        handleItems(id,val)
+        let val = { target: { name: "StrikeParameter", value: { Premium: value } } };
+        handleItems(id, val)
     }
 
     const handleStraddle = (id, sign, value) => {
         console.log(id, sign, value)
-        let val = { target: {name:"StrikeParameter", value:{ Adjustment: sign, Multiplier: value }}}
-        handleItems(id,val)
+        let val = { target: { name: "StrikeParameter", value: { Adjustment: sign, Multiplier: value } } }
+        handleItems(id, val)
     }
 
 
@@ -101,9 +104,18 @@ const LegCard = ({
 
     return (
         <Fragment>
-            <div onClick={() => handleDelete(id)} className="bg-red-600">{id}</div>
-            <div className="bg-[#EFEFEF] rounded-md m-auto my-6" style={{ width: "80%" }}>
-                <div className="flex justify-center items-baseline">
+            <div className="bg-[#EFEFEF] rounded-md m-auto my-6 border-2 relative" style={{ width: "80%" }}>
+            <div className="flex flex-col absolute top-0 right-0 h-16 w-16 ml-2 pl-12 ">      
+                <div className="p-2 bg-red-400 border rounded-full h-7 w-7 text-white">
+                    <ImCross size={10}/>
+                </div>
+                <div className="mt-3 p-1 bg-white text-blue-300 border rounded-full h-7 w-7">
+                    <FaRegCopy />
+                </div>
+            </div>
+                {/* <div onClick={() => handleDelete(id)}className="bg-red-600 text-xs  w-40">{id}</div> */}
+
+                <div className="flex flex-wrap justify-center items-baseline pt-5">
                     <h4 className="font-bold">
                         Lots:
                     </h4>
@@ -121,9 +133,6 @@ const LegCard = ({
                         <option value="Buy">Buy</option>
                     </select>
 
-                    {/* -------------------------------------------------------------------------------------------------
-                                           //! if any option selected
-                    -----------------------------------------------------------------------------------------------------*/}
                     <select className="m-2 bg-[#375A9E] text-white text-xs font-semibold  border-x-4 border-[#375A9E] w-18 py-1 px-2 rounded-full" name="ExpiryKind" value={expiryKind} onChange={(e) => handleItems(id, e)}>
                         <option value="Weekly">Weekly</option>
                         <option value="Monthly">Monthly</option>
@@ -154,7 +163,7 @@ const LegCard = ({
                                     id={id}
                                     handlePremiumRange={handlePremiumRange}
                                     strikeParamemter={strikeParamemter}
-                                /> : 
+                                /> :
                                 Type === "Closest Premium" ?
                                     <ClosestPremiumCard
                                         id={id}
@@ -175,13 +184,15 @@ const LegCard = ({
 
 
 
-                <div className="flex justify-evenly px-10">
+                <div className="flex flex-wrap justify-evenly px-10">
 
 
-                    <div className="border-2 border-black m-2 p-5">
+                    <div className="m-1 p-1 py-3">
                         <div className="flex items-center" >
-                            <input type="checkbox" name="LegMomentumEnable" value={!!legMomentumEnable} onChange={(e) => { handleItems(id, e) }} />
-                            <h4 className="mx-2">Simple Momentum</h4>
+                            <input 
+                            className="h-[9px] w-[9px] accent-[#375A9E]"
+                            type="checkbox" name="LegMomentumEnable" value={!!legMomentumEnable} onChange={(e) => { handleItems(id, e) }} />
+                            <h4 className="mx-2 text-sm">Simple Momentum</h4>
                         </div>
                         <div className={`flex  ${!legMomentumEnable ? "opacity-75" : ""}`} >
                             <select
@@ -211,10 +222,12 @@ const LegCard = ({
 
 
 
-                    <div className="border-2 border-black m-2 p-5">
+                    <div className="m-1 p-1 py-3">
                         <div className="flex items-center" >
-                            <input type="checkbox" name="LegTargetEnable" value={!!legTargetEnable} onChange={(e) => { handleItems(id, e) }} />
-                            <h4 className="mx-2">Target Profit</h4>
+                            <input 
+                            className="h-[9px] w-[9px] accent-[#375A9E]"
+                            type="checkbox" name="LegTargetEnable" value={!!legTargetEnable} onChange={(e) => { handleItems(id, e) }} />
+                            <h4 className="mx-2 text-sm">Target Profit</h4>
                         </div>
                         <div className={`flex  ${!legTargetEnable ? "opacity-75" : ""}`} >
                             <select
@@ -240,10 +253,12 @@ const LegCard = ({
 
 
 
-                    <div className="border-2 border-black m-2 p-5">
+                    <div className="m-1 p-1 py-3">
                         <div className="flex items-center" >
-                            <input type="checkbox" name="LegStopLossEnable" value={!!legStopLossEnable} onChange={(e) => { handleItems(id, e) }} />
-                            <h4 className="mx-2">Stop Loss</h4>
+                            <input 
+                            className="h-[9px] w-[9px] accent-[#375A9E]"
+                            type="checkbox" name="LegStopLossEnable" value={!!legStopLossEnable} onChange={(e) => { handleItems(id, e) }} />
+                            <h4 className="mx-2 text-sm">Stop Loss</h4>
                         </div>
                         <div className={`flex  ${!legStopLossEnable ? "opacity-75" : ""}`} >
                             <select
@@ -267,10 +282,12 @@ const LegCard = ({
                         </div>
                     </div>
 
-                    <div className="border-2 border-black m-2 p-5">
-                        <div className="flex items-center" >
-                            <input type="checkbox" name="LegTrailSLEnable" value={!!legTrailSLEnable} onChange={(e) => { handleItems(id, e) }} />
-                            <h4 className="mx-2">Trail SL</h4>
+                    <div className="m-1 p-1 py-3  flex-col">
+                        <div className="flex items-center">
+                            <input 
+                            className="h-[9px] w-[9px] accent-[#375A9E]"
+                            type="checkbox" name="LegTrailSLEnable" value={!!legTrailSLEnable} onChange={(e) => { handleItems(id, e) }} />
+                            <h4 className="mx-2 text-sm">Trail SL</h4>
                         </div>
                         <div className={`flex  ${!legTrailSLEnable ? "opacity-75" : ""}`} >
                             <select
@@ -303,10 +320,12 @@ const LegCard = ({
 
 
 
-                    <div className="border-2 border-black m-2 p-5">
+                    <div className="m-1 p-1 py-3">
                         <div className="flex items-center" >
-                            <input type="checkbox" name="LegReentryTPEnable" value={!!legReentryTPEnable} onChange={(e) => { handleItems(id, e) }} />
-                            <h4 className="mx-2">Re-entry on Tgt</h4>
+                            <input 
+                            className="h-[9px] w-[9px] accent-[#375A9E]"
+                            type="checkbox" name="LegReentryTPEnable" value={!!legReentryTPEnable} onChange={(e) => { handleItems(id, e) }} />
+                            <h4 className="mx-2 text-sm">Re-entry on Tgt</h4>
                         </div>
                         <div className={`flex  ${!legReentryTPEnable ? "opacity-75" : ""}`} >
                             <select
@@ -335,20 +354,22 @@ const LegCard = ({
 
                 </div>
 
-                <div className="flex justify-center">
-                    <div className="border-2 border-black m-2 p-5">
+                <div className="flex justify-center md:flex-auto ">
+                    <div className="m-1 p-1 py-3">
                         <div className="flex items-center">
-                            <input type="checkbox" name="LegReentrySLEnable" value={!!legReentrySLEnable} onChange={(e) => { handleItems(id, e) }} />
-                            <h4 className="mx-2">Re-entry on SL</h4>
+                            <input 
+                            className="h-[9px] w-[9px] accent-[#375A9E]"
+                            type="checkbox" name="LegReentrySLEnable" value={!!legReentrySLEnable} onChange={(e) => { handleItems(id, e) }} />
+                            <h4 className="mx-2 text-sm">Re-entry on SL</h4>
                         </div>
                         <div className={`flex  ${!legReentrySLEnable} ? "opacity-75" : ""}`} >
 
                             <select
                                 disabled={!legReentrySLEnable}
-                                className="my-2 bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full"  value={legReentrySLValue.Type}
+                                className="my-2 bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" value={legReentrySLValue.Type}
                                 name="LegReentrySL"
-                                onChange={(e)=>handleTypes(id,e,legReentrySLValue)}
-                                >
+                                onChange={(e) => handleTypes(id, e, legReentrySLValue)}
+                            >
                                 <option value="ASAP">RE ASAP</option>
                                 <option value="ASAPReverse">RE ASAP </option>
                                 <option value="Momentum">RE MOMENTUM</option>
@@ -362,8 +383,8 @@ const LegCard = ({
                                     className="text-sm m-3  px-3 rounded-full borderbo-4 border-white  h-5 w-20"
                                     type="number" min="0" value={legReentrySLValue.Value}
                                     name="LegReentrySL"
-                                    onChange={(e)=>handleValues(id,e,legReentrySLValue)}
-                                    />
+                                    onChange={(e) => handleValues(id, e, legReentrySLValue)}
+                                />
                             </div>
                         </div>
                     </div>

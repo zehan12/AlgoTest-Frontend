@@ -11,6 +11,7 @@ import {
     deleteDoc,
     doc,
 } from "firebase/firestore";
+import LegCard from "./LegCard";
 
 
 
@@ -19,23 +20,29 @@ const Legs = () => {
 
     const legsCollectionRef = collection(db, "legs");
 
+     //! add legItems in state
+     const [legItems, setLegItems] = useState([])
+    // const [legItems, setLegItems] = useState(JSON.parse(localStorage.getItem("LEG")) || [])
+
+    const fetchLegs = async () => {
+        const data = await getDocs(legsCollectionRef);
+        data.docs.forEach((doc)=>console.log({...doc.data(),id:doc.id}))
+        setLegItems(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    }
+
     useEffect(() => {
 
-        const fetchBlogs = async () => {
-
-        }
-
-        fetchBlogs()
-        fetchData()
+        // fetchLegs()
+        // fetchData()
     }, [])
 
 
-    const fetchData = async () => {
-        const res = await fetch("https://algotest-61f5c-default-rtdb.asia-southeast1.firebasedatabase.app/legs.json");
+    // const fetchData = async () => {
+    //     const res = await fetch("https://algotest-61f5c-default-rtdb.asia-southeast1.firebasedatabase.app/legs.json");
 
-        const data = await res.json();
-        console.log(data, "from fetch fuction")
-    }
+    //     const data = await res.json();
+    //     console.log(data, "from fetch fuction")
+    // }
 
     const handleClick = () => {
         setLegAdd(!legAdd);
@@ -75,10 +82,7 @@ const Legs = () => {
     // const [ legStopLossEnable, setLegStopLossEnable ] = useState(false);
     // const [ leg ]
 
-
-
-    //! add legItems in state
-    const [legItems, setLegItems] = useState(JSON.parse(localStorage.getItem("LEG")) || [])
+    
 
     const handleChange = ({ target }) => {
         const { name, value } = target
@@ -165,70 +169,21 @@ const Legs = () => {
                 Value: 1
             }
         }
-        setLegItems([...legItems, legData]);
 
 
         const res = await addDoc(legsCollectionRef, {
-            id: Date.now(),
-            PositionType: position,
-            Lots: totalLeg,
-
-            LegStopLossEnable: false,
-
-            LegStopLoss: {
-                Type: "None",
-                Value: 0,
-            },
-
-            LegTargetEnable: false,
-
-            LegTarget: {
-                Type: "None",
-                Value: 0,
-            },
-
-            LegTrailSLEnable: false,
-
-            LegTrailSL: {
-                Type: "None",
-                Value: {
-                    InstrumentMove: 0,
-                    StopLossMove: 0,
-                }
-            },
-
-            LegMomentumEnable: false,
-
-            LegMomentum: {
-                Type: "None",
-                Value: 0
-            },
-            ExpiryKind: expiry,
-            EntryType: strike,
-
-
-            StrikeParameter,
-
-            InstrumentKind: optionType,
-
-            LegReentrySLEnable: false,
-
-            LegReentrySL: {
-                Type: "None",
-                Value: 1
-            },
-
-            LegReentryTPEnable: false,
-
-            LegReentryTP: {
-                Type: "None",
-                Value: 1
-            }
+            createId: Date.now(), PositionType: position, Lots: totalLeg,
+            ExpiryKind: expiry, EntryType: strike, StrikeParameter, InstrumentKind: optionType,
+            LegStopLossEnable: false, LegStopLoss: { Type: "None", Value: 0, },
+            LegTargetEnable: false, LegTarget: { Type: "None", Value: 0, },
+            LegTrailSLEnable: false, LegTrailSL: { Type: "None", Value: { InstrumentMove: 0, StopLossMove: 0, } },
+            LegMomentumEnable: false, LegMomentum: { Type: "None", Value: 0 },
+            LegReentrySLEnable: false, LegReentrySL: { Type: "None", Value: 1 },
+            LegReentryTPEnable: false, LegReentryTP: { Type: "None", Value: 1 }
         });
 
 
-
-        console.log(res, "response what i want")
+        fetchLegs();
 
         // const res = await fetch("https://algotest-61f5c-default-rtdb.asia-southeast1.firebasedatabase.app/legs.json",
         //     {
@@ -241,18 +196,23 @@ const Legs = () => {
         // );
     }
 
-    useEffect(() => {
-        storeLegToLocal()
-    }, [legItems])
+    // useEffect(() => {
+    //     storeLegToLocal()
+    // }, [legItems])
 
-    const storeLegToLocal = () => {
-        const stringifyitems = JSON.stringify(legItems)
-        localStorage.setItem("LEG", stringifyitems)
-    }
+    // const storeLegToLocal = () => {
+    //     const stringifyitems = JSON.stringify(legItems)
+    //     localStorage.setItem("LEG", stringifyitems)
+    // }
 
-    const handleDelete = (id) => {
-        let itemUpdatedClone = legItems.filter(item => (item.id !== id))
-        setLegItems(itemUpdatedClone)
+
+
+    const handleDelete = async(id) => {
+        const legDoc = doc(db, "legs", id );
+        await deleteDoc(legDoc);
+        fetchLegs()
+        // let itemUpdatedClone = legItems.filter(item => (item.id !== id))
+        // setLegItems(itemUpdatedClone)
     }
 
     const handleItems = (id, { target }) => {
@@ -280,18 +240,24 @@ const Legs = () => {
     }
 
 
+    const updateleg = async (id, {target}) => {
+        const { name, value } = target;
+        const legDoc = doc(db, "legs", id);
+        const newFields = { name: value };
+        await updateDoc(legDoc, newFields);
+      };
 
     return (
         <Fragment>
             <div
-                className="bg-[#F6F6F6] border-4-black mx-auto"
+                className="border-4-black mx-auto"
                 style={{ width: "80%" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", padding: "20px" }}>
+                <div className="flex justify-between px-7 pb-1 pt-7 border-b-[1px]" >
                     <h2 className="font-bold">Legs</h2>
                     <button
-                        style={{ opacity: legAdd ? "0.6" : "" }} className="font-bold text-xl text-[#375A9E]"
+                     className={`font-bold text-l text-[#375A9E] ${ legAdd ? "opacity-[.2]" : ""}`}
                         onClick={handleClick}>
-                        + Add Leg
+                        + Add Leg{legAdd}
                     </button>
                 </div>
                 {
@@ -310,7 +276,7 @@ const Legs = () => {
                             plusMinus={plusMinus}
                             multiplier={multiplier}
                         />
-                        <div className="p-4" >
+                        <div className="p-4 bg-[#F6F6F6]" >
                             <button className="px-14 py-1 bg-[#375A9E] text-white text-sm font-semibold rounded-full mr-2"
                                 onClick={(e) => handleSubmit(e)}
                             >Add Leg</button>
@@ -321,7 +287,16 @@ const Legs = () => {
                 }
             </div>
             <LegList
-                legItems={legItems}
+                legItems={legItems || [ {
+                    createId: Date.now(), PositionType: position, Lots: totalLeg,
+                    ExpiryKind: expiry, EntryType: strike, StrikeParameter:"ATM", InstrumentKind: optionType,
+                    LegStopLossEnable: false, LegStopLoss: { Type: "None", Value: 0, },
+                    LegTargetEnable: false, LegTarget: { Type: "None", Value: 0, },
+                    LegTrailSLEnable: false, LegTrailSL: { Type: "None", Value: { InstrumentMove: 0, StopLossMove: 0, } },
+                    LegMomentumEnable: false, LegMomentum: { Type: "None", Value: 0 },
+                    LegReentrySLEnable: false, LegReentrySL: { Type: "None", Value: 1 },
+                    LegReentryTPEnable: false, LegReentryTP: { Type: "None", Value: 1 }
+                } ]}
                 handleDelete={handleDelete}
                 handleItems={handleItems}
             />

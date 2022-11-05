@@ -49,35 +49,31 @@ const Segment = ({
 
   return (
     <Fragment>
-      <div>
+      <div className="bg-[#F6F6F6] ">
         <div
-          className="flex  align-middle justify-center">
-          {/* //  style={{ display: "flex", alignItems: "center", justifyContent: "center" }} */}
-          <h3 className="font-bold">Select segments </h3>
-          <div style={{ display: "flex" }}>
+          className="flex md:flex-row flex-col items-center md:align-middle md:justify-center p-4 md:pt-10">
+          <h3 className="font-bold m-2">Select segments </h3>
+          <div className="flex">
             <button
-              className="text-sm ml-3  pr-3 pl-4 p-1 rounded-l-full	"
+              className={`text-sm ml-3  pr-3 pl-4 p-1 rounded-l-full	hover:bg-blue-700 ${selected === "futures" ? "bg-[#375A9E] text-white": "bg-white text-[#3F3F3F]" }`}
               style={{ backgroundColor: selected === "futures" ? "#375A9E" : "white", color: selected === "futures" ? "white" : "#3F3F3F" }}
               onClick={(e) => handleClick(e)}>Futures</button>
             <button
-              className="text-sm pr-4 pl-3 rounded-r-full"
-              style={{ backgroundColor: selected === "options" ? "#375A9E" : "white", color: selected === "options" ? "white" : "#3F3F3F" }}
+              className={`text-sm pr-4 pl-3 rounded-r-full ${selected === "options" ? "bg-[#375A9E] text-white": "bg-white text-[#3F3F3F]" }`}
               onClick={(e) => handleClick(e)}>Options</button>
           </div>
         </div>
 
         {
           selected === "futures" ? <Fragment>
-            <div style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}
-
-              className="flex border-red-900 border-4 justify-evenly p-5"
+            <div
+              className="flex flex-row justify-evenly  md:justify-center p-5"
             >
               <div>
                 <h4 className="text-l font-bold">Total lot</h4>
                 <input
                   name="totalLot"
                   className="border-black m-3 px-3 rounded-full h-5 w-14"
-                  // onKeyDown={""}
                   onChange={(e) => handleChange(e)}
                   type="number" min="1"
                   value={totalLeg}
@@ -95,8 +91,8 @@ const Segment = ({
           </Fragment>
             :
             <Fragment>
-              <div style={{ display: "flex", flexDirection: "row" }}
-                className="flex border-red-900 border-4 justify-evenly p-5"
+              <div 
+                className="flex flex-wrap md:flex-row justify-evenly p-5"
               >
                 <div>
                   <h4 className="text-l font-bold">Total lot</h4>
