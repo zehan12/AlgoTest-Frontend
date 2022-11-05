@@ -6,7 +6,8 @@ import StraddleWidthCard from "./strikesOptions/StraddleWidthCard";
 import StrikesTypes from "./strikesOptions/StrikesTypes";
 import { FaRegCopy } from "react-icons/fa"
 import { ImCross } from "react-icons/im"
-
+import { simpleMomentumOptions, targetProfitAndStopLossOptions, reEntryArray } from "../utils/constant";
+import AddValueCard from "./AddValueCard";
 
 
 
@@ -21,23 +22,18 @@ const LegCard = ({
     entryType,
     strikeParamemter,
 
-    legMomentumEnable,
     legMomentumValue,
 
 
-    legTargetEnable,
     legTargetValue,
 
-    legStopLossEnable,
     legStopLossValue,
 
     legTrailSLEnable,
     legTrailSLValue,
 
-    legReentryTPEnable,
     legReentryTPValue,
 
-    legReentrySLEnable,
     legReentrySLValue,
 
 }) => {
@@ -62,6 +58,18 @@ const LegCard = ({
         let clone = { ...targetObj };
         clone.Type = e.target.value;
         handleItems(id, { target: { name: e.target.name, value: { ...clone } } })
+    }
+
+    const handleEnableDisable = ({ id, name, initialOption, isChecked, targetObj }) => {
+        const option = isChecked ? "None" : initialOption;
+        let clone = { ...targetObj };
+        clone.Type = option
+        if (isChecked) {
+            clone.Value = 0
+        }
+
+        console.log(id, name, initialOption, isChecked, targetObj, "xxxxxxxxxxxxxx")
+        handleItems(id, { target: { name: name, value: { ...clone } } })
     }
 
     const handleValues = (id, e, targetObj) => {
@@ -105,16 +113,16 @@ const LegCard = ({
     return (
         <Fragment>
             <div className="bg-[#EFEFEF] rounded-md m-auto my-6 relative" style={{ width: "80%" }}>
-            <div className="flex flex-col absolute top-0 right-0 h-16 w-16 ml-2 pl-12 ">      
-                <div 
-                onClick={() => handleDelete(id)}
-                className="p-2 bg-red-400 border rounded-full h-7 w-7 text-white">
-                    <ImCross size={10}/>
+                <div className="flex flex-col absolute top-0 right-0 h-16 w-16 ml-2 pl-12 ">
+                    <div
+                        onClick={() => handleDelete(id)}
+                        className="p-2 bg-red-400 border rounded-full h-7 w-7 text-white">
+                        <ImCross size={10} />
+                    </div>
+                    <div className="mt-3 p-1 bg-white text-blue-300 border rounded-full h-7 w-7">
+                        <FaRegCopy />
+                    </div>
                 </div>
-                <div className="mt-3 p-1 bg-white text-blue-300 border rounded-full h-7 w-7">
-                    <FaRegCopy />
-                </div>
-            </div>
                 {/* <div onClick={() => handleDelete(id)}className="bg-red-600 text-xs  w-40">{id}</div> */}
 
                 <div className="flex flex-wrap justify-center items-baseline pt-5">
@@ -185,110 +193,51 @@ const LegCard = ({
                 </div>
 
 
-
                 <div className="flex flex-wrap justify-evenly px-10">
 
-
-                    <div className="m-1 p-1 py-3">
-                        <div className="flex items-center" >
-                            <input 
-                            className="h-[9px] w-[9px] accent-[#375A9E]"
-                            type="checkbox" name="LegMomentumEnable" value={!!legMomentumEnable} onChange={(e) => { handleItems(id, e) }} />
-                            <h4 className="mx-2 text-sm">Simple Momentum</h4>
-                        </div>
-                        <div className={`flex  ${!legMomentumEnable ? "opacity-75" : ""}`} >
-                            <select
-                                disabled={!legMomentumEnable}
-                                className="my-2  bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="LegMomentum" value={legMomentumValue.Type}
-                                onChange={(e) => handleTypes(id, e, legMomentumValue)}
-                            >
-                                <option value="PointsUp">Points &uarr;</option>
-                                <option value="PointsDown">Points &darr;</option>
-                                <option value="PremiumRangeUp">Premium Range  &uarr;</option>
-                                <option value="PremiumRangeDown">Premium Range  &darr;</option>
-                                <option value="UnderlyingPointsUp">Underlying Points &uarr;</option>
-                                <option value="UnderlyingPointsDown">Underlying Points &darr;</option>
-                                <option value="UnderlyingPointsPremiumUp">Underlying Points Premium &uarr;</option>
-                                <option value="UnderlyingPointsPremiumDown">Underlying Points Premium &darr;</option>
-                            </select>
-                            <div>
-                                <input
-                                    disabled={!legMomentumEnable}
-                                    className="text-sm m-3  rounded-full border-4 border-white  h-5 w-20"
-                                    type="number" min="0" value={legMomentumValue.Value}
-                                    name="LegMomentum"
-                                    onChange={(e) => handleValues(id, e, legMomentumValue)} />
-                            </div>
-                        </div>
-                    </div>
+                    <AddValueCard
+                        id={id}
+                        name={"LegMomentum"}
+                        componentName={"Simple Momentum"}
+                        checkboxName={"LegMomentumEnable"}
+                        handleEnableDisable={handleEnableDisable}
+                        targetObj={legMomentumValue}
+                        arrayOfOptions={simpleMomentumOptions}
+                        handleTypes={handleTypes}
+                        handleValues={handleValues}
+                    />
 
 
-
-                    <div className="m-1 p-1 py-3">
-                        <div className="flex items-center" >
-                            <input 
-                            className="h-[9px] w-[9px] accent-[#375A9E]"
-                            type="checkbox" name="LegTargetEnable" value={!!legTargetEnable} onChange={(e) => { handleItems(id, e) }} />
-                            <h4 className="mx-2 text-sm">Target Profit</h4>
-                        </div>
-                        <div className={`flex  ${!legTargetEnable ? "opacity-75" : ""}`} >
-                            <select
-                                disabled={!legTargetEnable}
-                                className="my-2  bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="LegTarget" value={legTargetValue.Type}
-                                onChange={(e) => handleTypes(id, e, legTargetValue)}
-                            >
-                                <option value="Points">Points</option>
-                                <option value="UnderlyingPoints">Underlying Points</option>
-                                <option value="Percentage">Precentage</option>
-                                <option value="UnderlyingPercentage">Underlying Precentage;</option>
-                            </select>
-                            <div>
-                                <input
-                                    disabled={!legTargetEnable}
-                                    className="text-sm m-3  rounded-full border-4 border-white  h-5 w-20"
-                                    type="number" min="0" value={legTargetValue.Value}
-                                    name="LegTarget"
-                                    onChange={(e) => handleValues(id, e, legTargetValue)} />
-                            </div>
-                        </div>
-                    </div>
+                    <AddValueCard
+                        id={id}
+                        name={"LegTarget"}
+                        componentName={"Target Profit"}
+                        checkboxName={"LegTargetEnable"}
+                        handleEnableDisable={handleEnableDisable}
+                        targetObj={legTargetValue}
+                        arrayOfOptions={targetProfitAndStopLossOptions}
+                        handleTypes={handleTypes}
+                        handleValues={handleValues}
+                    />
 
 
-
-                    <div className="m-1 p-1 py-3">
-                        <div className="flex items-center" >
-                            <input 
-                            className="h-[9px] w-[9px] accent-[#375A9E]"
-                            type="checkbox" name="LegStopLossEnable" value={!!legStopLossEnable} onChange={(e) => { handleItems(id, e) }} />
-                            <h4 className="mx-2 text-sm">Stop Loss</h4>
-                        </div>
-                        <div className={`flex  ${!legStopLossEnable ? "opacity-75" : ""}`} >
-                            <select
-                                disabled={!legStopLossEnable}
-                                className="my-2  bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="LegStopLoss" value={legStopLossValue.Type}
-                                onChange={(e) => handleTypes(id, e, legStopLossValue)}
-                            >
-                                <option value="Points">Points</option>
-                                <option value="UnderlyingPoints">Underlying Points</option>
-                                <option value="Percentage">Precentage</option>
-                                <option value="UnderlyingPercentage">Underlying Precentage;</option>
-                            </select>
-                            <div>
-                                <input
-                                    disabled={!legStopLossEnable}
-                                    className="text-sm m-3  rounded-full border-4 border-white  h-5 w-20"
-                                    type="number" min="0" value={legStopLossValue.Value}
-                                    name="LegStopLoss"
-                                    onChange={(e) => handleValues(id, e, legStopLossValue)} />
-                            </div>
-                        </div>
-                    </div>
+                    <AddValueCard
+                        id={id}
+                        name={"LegStopLoss"}
+                        componentName={"Stop Loss"}
+                        checkboxName={"LegStopLossEnable"}
+                        handleEnableDisable={handleEnableDisable}
+                        targetObj={legStopLossValue}
+                        arrayOfOptions={targetProfitAndStopLossOptions}
+                        handleTypes={handleTypes}
+                        handleValues={handleValues}
+                    />
 
                     <div className="m-1 p-1 py-3  flex-col">
                         <div className="flex items-center">
-                            <input 
-                            className="h-[9px] w-[9px] accent-[#375A9E]"
-                            type="checkbox" name="LegTrailSLEnable" value={!!legTrailSLEnable} onChange={(e) => { handleItems(id, e) }} />
+                            <input
+                                className="h-[9px] w-[9px] accent-[#375A9E]"
+                                type="checkbox" name="LegTrailSLEnable" value={!!legTrailSLEnable} onChange={(e) => { handleItems(id, e) }} />
                             <h4 className="mx-2 text-sm">Trail SL</h4>
                         </div>
                         <div className={`flex  ${!legTrailSLEnable ? "opacity-75" : ""}`} >
@@ -320,78 +269,32 @@ const LegCard = ({
                         </div>
                     </div>
 
-
-
-                    <div className="m-1 p-1 py-3">
-                        <div className="flex items-center" >
-                            <input 
-                            className="h-[9px] w-[9px] accent-[#375A9E]"
-                            type="checkbox" name="LegReentryTPEnable" value={!!legReentryTPEnable} onChange={(e) => { handleItems(id, e) }} />
-                            <h4 className="mx-2 text-sm">Re-entry on Tgt</h4>
-                        </div>
-                        <div className={`flex  ${!legReentryTPEnable ? "opacity-75" : ""}`} >
-                            <select
-                                disabled={!legReentryTPEnable}
-                                className="my-2  bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" name="LegReentryTP" value={legReentryTPValue.Type}
-                                onChange={(e) => handleTypes(id, e, legReentryTPValue)}
-                            >
-                                <option value="ASAP">RE ASAP</option>
-                                <option value="ASAPReverse">RE ASAP </option>
-                                <option value="Momentum">RE MOMENTUM</option>
-                                <option value="MomentumReverse">RE MOMENTUM</option>
-                                <option value="COST">RE COST</option>
-                                <option value="COSTReverse">RE COST </option>
-                            </select>
-                            <div>
-                                <input
-                                    disabled={!legReentryTPEnable}
-                                    className="text-sm m-3  rounded-full border-4 border-white  h-5 w-20"
-                                    type="number" min="0" value={legReentryTPValue.Value}
-                                    name="LegReentryTP"
-                                    onChange={(e) => handleValues(id, e, legReentryTPValue)} />
-                            </div>
-                        </div>
-                    </div>
-
-
+                    <AddValueCard
+                        id={id}
+                        name={"LegReentryTP"}
+                        componentName={"Re-entry on Tgt"}
+                        checkboxName={"LegReentryTPEnable"}
+                        handleEnableDisable={handleEnableDisable}
+                        targetObj={legReentryTPValue}
+                        arrayOfOptions={reEntryArray}
+                        handleTypes={handleTypes}
+                        handleValues={handleValues}
+                    />
                 </div>
 
                 <div className="flex justify-center md:flex-auto ">
-                    <div className="m-1 p-1 py-3">
-                        <div className="flex items-center">
-                            <input 
-                            className="h-[9px] w-[9px] accent-[#375A9E]"
-                            type="checkbox" name="LegReentrySLEnable" value={!!legReentrySLEnable} onChange={(e) => { handleItems(id, e) }} />
-                            <h4 className="mx-2 text-sm">Re-entry on SL</h4>
-                        </div>
-                        <div className={`flex  ${!legReentrySLEnable} ? "opacity-75" : ""}`} >
-
-                            <select
-                                disabled={!legReentrySLEnable}
-                                className="my-2 bg-[#375A9E] text-white text-xs font-semibold border-x-4 border-[#375A9E] w-20 py-1 px-2 rounded-full" value={legReentrySLValue.Type}
-                                name="LegReentrySL"
-                                onChange={(e) => handleTypes(id, e, legReentrySLValue)}
-                            >
-                                <option value="ASAP">RE ASAP</option>
-                                <option value="ASAPReverse">RE ASAP </option>
-                                <option value="Momentum">RE MOMENTUM</option>
-                                <option value="MomentumReverse">RE MOMENTUM</option>
-                                <option value="COST">RE COST</option>
-                                <option value="COSTReverse">RE COST </option>
-                            </select>
-                            <div>
-                                <input
-                                    disabled={!legReentrySLEnable}
-                                    className="text-sm m-3  px-3 rounded-full borderbo-4 border-white  h-5 w-20"
-                                    type="number" min="0" value={legReentrySLValue.Value}
-                                    name="LegReentrySL"
-                                    onChange={(e) => handleValues(id, e, legReentrySLValue)}
-                                />
-                            </div>
-                        </div>
-                    </div>
+                    <AddValueCard
+                        id={id}
+                        name={"LegReentrySL"}
+                        componentName={"Re-entry on SL"}
+                        checkboxName={"LegReentrySLEnable"}
+                        handleEnableDisable={handleEnableDisable}
+                        targetObj={legReentrySLValue}
+                        arrayOfOptions={reEntryArray}
+                        handleTypes={handleTypes}
+                        handleValues={handleValues}
+                    />
                 </div>
-
             </div>
         </Fragment>
     )

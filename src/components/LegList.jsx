@@ -14,28 +14,12 @@ const LegList = ({ legItems, handleDelete, handleItems }) => {
                 expiryKind={leg.ExpiryKind}
                 entryType={leg.EntryType}
                 strikeParamemter={leg.StrikeParameter}
-
-                legMomentumEnable={leg.LegMomentumEnable}
                 legMomentumValue={leg.LegMomentum}
-
-                legTargetEnable={leg.LegTargetEnable}
                 legTargetValue={leg.LegTarget}
-
-                legStopLossEnable={leg.LegStopLossEnable}
                 legStopLossValue={leg.LegStopLoss}
-
-
-                legTrailSLEnable={leg.LegTrailSLEnable}
                 legTrailSLValue={leg.LegTrailSL}
-
-
-                legReentryTPEnable={leg.LegReentryTPEnable}
                 legReentryTPValue={leg.LegReentryTP}
-
-                legReentrySLEnable={leg.LegReentrySLEnable}
                 legReentrySLValue={leg.LegReentrySL}
-
-
                 key={leg.id}
                 id={leg.id}
                 handleDelete={handleDelete}
@@ -43,6 +27,6 @@ const LegList = ({ legItems, handleDelete, handleItems }) => {
             />)}
         </Fragment>
     )
-}
+} 
 
 export default LegList;

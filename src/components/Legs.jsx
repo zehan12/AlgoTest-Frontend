@@ -21,18 +21,17 @@ const Legs = () => {
 
     const legsCollectionRef = collection(db, "legs");
 
-     //! add legItems in state
-     const [legItems, setLegItems] = useState([])
+    //! add legItems in state
+    const [legItems, setLegItems] = useState([])
     // const [legItems, setLegItems] = useState(JSON.parse(localStorage.getItem("LEG")) || [])
 
     const fetchLegs = async () => {
         const data = await getDocs(legsCollectionRef);
-        data.docs.forEach((doc)=>console.log({...doc.data(),id:doc.id}))
+        data.docs.forEach((doc) => console.log({ ...doc.data(), id: doc.id }))
         setLegItems(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     }
 
     useEffect(() => {
-
         fetchLegs()
         toast.success("Legs Fetched")
     }, [])
@@ -56,9 +55,9 @@ const Legs = () => {
     const [premium, setPremium] = useState(50);
     const [plusMinus, setPlusMinus] = useState("+");
     const [multiplier, setMultiplier] = useState(0.5);
-    
 
-    const [ loading, setLoading ] = useState(false);
+
+    const [loading, setLoading] = useState(false);
 
     const handleChange = ({ target }) => {
         const { name, value } = target
@@ -82,7 +81,7 @@ const Legs = () => {
     }
 
     const handleSubmit = async (e) => {
-        
+
         setLoading(true)
 
         e.preventDefault();
@@ -92,7 +91,7 @@ const Legs = () => {
                     strike === "Straddle Width" ? { Adjustment: plusMinus, Multiplier: multiplier } : ""
 
 
-        const res = await addDoc(legsCollectionRef, {
+        await addDoc(legsCollectionRef, {
             createId: Date.now(), PositionType: position, Lots: totalLeg,
             ExpiryKind: expiry, EntryType: strike, StrikeParameter, InstrumentKind: optionType,
             LegStopLossEnable: false, LegStopLoss: { Type: "None", Value: 0, },
@@ -112,46 +111,55 @@ const Legs = () => {
 
 
 
-    const handleDelete = async(id) => {
+    const handleDelete = async (id) => {
         toast.success(`Leg ID:${id} is Deleted`)
-        const legDoc = doc(db, "legs", id );
+        const legDoc = doc(db, "legs", id);
         await deleteDoc(legDoc);
         fetchLegs()
         // let itemUpdatedClone = legItems.filter(item => (item.id !== id))
         // setLegItems(itemUpdatedClone)
     }
 
-    const handleItems = (id, { target }) => {
-        const { name, value } = target;
-        console.log(name, value, target.type)
-        if (target.type === "checkbox" && target.checked !== undefined) {
-            console.log("heler")
-            let toggleEnables = legItems.map(item => {
-                if (item.id === id) {
-                    console.log("val", item[name])
-                    item[name] = !!target.checked;
-                }
-                return { ...item }
-            })
-            setLegItems([...toggleEnables]);
-        } else {
-            let itemUpdatedClone = legItems.map(item => {
-                if (item.id === id) {
-                    item[name] = value
-                }
-                return { ...item }
-            })
-            setLegItems([...itemUpdatedClone]);
-        }
-    }
+    // const handleItems = (id, { target }) => {
+    //     const { name, value } = target;
+    //     console.log(name, value, target.type)
+    //     if (target.type === "checkbox" && target.checked !== undefined) {
+    //         console.log("heler")
+    //         let toggleEnables = legItems.map(item => {
+    //             if (item.id === id) {
+    //                 console.log("val", item[name])
+    //                 item[name] = !!target.checked;
+    //             }
+    //             return { ...item }
+    //         })
+    //         setLegItems([...toggleEnables]);
+    //     } else {
+    //         let itemUpdatedClone = legItems.map(item => {
+    //             if (item.id === id) {
+    //                 item[name] = value
+    //             }
+    //             return { ...item }
+    //         })
+    //         setLegItems([...itemUpdatedClone]);
+    //     }
+    // }
 
 
-    const updateleg = async (id, {target}) => {
+    const handleItems = async (id, { target }) => {
         const { name, value } = target;
+        console.log(name, target.type, target.checked);
+        let newFields
         const legDoc = doc(db, "legs", id);
-        const newFields = { name: value };
+        if (target.type === "checkbox" && target.checked !== undefined) {
+            // console.log("value::::",typeof value)
+            newFields = { [name]: target.checked };
+        }
+        else {
+            newFields = { [name]: value };
+        }
         await updateDoc(legDoc, newFields);
-      };
+        fetchLegs()
+    };
 
     return (
         <Fragment>
@@ -161,7 +169,7 @@ const Legs = () => {
                 <div className="flex justify-between px-7 pb-1 pt-7 border-b-[1px]" >
                     <h2 className="font-bold">Legs</h2>
                     <button
-                     className={`font-bold text-l text-[#375A9E] ${ legAdd ? "opacity-[.2]" : ""}`}
+                        className={`font-bold text-l text-[#375A9E] ${legAdd ? "opacity-[.2]" : ""}`}
                         onClick={handleClick}>
                         + Add Leg{legAdd}
                     </button>
@@ -186,10 +194,10 @@ const Legs = () => {
                             <button className="px-14 py-1 bg-[#375A9E] text-white text-sm font-semibold rounded-full mr-2"
                                 disable={loading}
                                 onClick={(e) => handleSubmit(e)}
-                            >{ loading === false ? <Loading text={"Adding Leg"} /> 
-                            : "Add Leg" }</button>
-                            <button 
-                            className="px-14 py-1 bg-white text-[#375A9E] text-sm font-semibold rounded-full ml-2"
+                            >{loading === false ? <Loading text={"Adding Leg"} />
+                                : "Add Leg"}</button>
+                            <button
+                                className="px-14 py-1 bg-white text-[#375A9E] text-sm font-semibold rounded-full ml-2"
                                 onClick={() => setLegAdd(false)}>Cancel</button>
                         </div>
                     </Fragment> : ""
