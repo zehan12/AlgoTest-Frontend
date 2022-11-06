@@ -8,7 +8,7 @@ function App() {
     <Fragment>
       <ToastContainer />
       <div className="App">
-        <h1>Leg Feature</h1>
+        <h1 className='text-4xl my-3 font-bold text-[#375A9E]'>Leg Feature</h1>
         <Legs />
       </div>
     </Fragment>

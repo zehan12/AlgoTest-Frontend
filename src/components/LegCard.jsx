@@ -36,19 +36,17 @@ const LegCard = ({
 
     legReentrySLValue,
 
+    handleCreateCopy
 }) => {
 
-    console.log(strikeParamemter)
 
     const handleTrailSl = (id, e) => {
         let clone = { ...legTrailSLValue }
         clone.Value[e.target.name] = +e.target.value
-        console.log(clone)
         handleItems(id, { target: { name: "LegTrailSL", value: { ...clone } } })
     }
 
-    const handleType = (id, e, targetObj) => {
-        console.log(targetObj, e.target.name, "my function call")
+    const handleType = (id, e ) => {
         let clone = { ...legTrailSLValue };
         clone.Type = e.target.value
         handleItems(id, { target: { name: "LegTrailSL", value: { ...clone } } })
@@ -67,8 +65,6 @@ const LegCard = ({
         if (isChecked) {
             clone.Value = 0
         }
-
-        console.log(id, name, initialOption, isChecked, targetObj, "xxxxxxxxxxxxxx")
         handleItems(id, { target: { name: name, value: { ...clone } } })
     }
 
@@ -91,7 +87,6 @@ const LegCard = ({
     }
 
     const handlePremiumRange = (id, lower, upper) => {
-        console.log(id, lower, upper)
         let val = { target: { name: "StrikeParameter", value: { Lower: lower, Upper: upper } } }
         handleItems(id, val)
     }
@@ -102,7 +97,6 @@ const LegCard = ({
     }
 
     const handleStraddle = (id, sign, value) => {
-        console.log(id, sign, value)
         let val = { target: { name: "StrikeParameter", value: { Adjustment: sign, Multiplier: value } } }
         handleItems(id, val)
     }
@@ -119,7 +113,9 @@ const LegCard = ({
                         className="p-2 bg-red-400 border rounded-full h-7 w-7 text-white">
                         <ImCross size={10} />
                     </div>
-                    <div className="mt-3 p-1 bg-white text-blue-300 border rounded-full h-7 w-7">
+                    <div
+                    onClick={()=>{handleCreateCopy(id)}}
+                     className="mt-3 p-1 bg-white text-blue-300 border rounded-full h-7 w-7">
                         <FaRegCopy />
                     </div>
                 </div>

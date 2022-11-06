@@ -1,7 +1,6 @@
 import { Fragment } from "react"
 
 const SelectStrikesCriteria = ({ id, handleItems, entryType, handleEntry  }) => {
-    // console.log(id,handleItems,entryType,"string")
     return (
         <Fragment>
             <h4 className="text-l font-bold">Selcted Strike</h4>

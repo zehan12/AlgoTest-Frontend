@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 const PremiumRangeCard = ({id, handlePremiumRange, strikeParamemter  }) => {
-    console.log(strikeParamemter, "inside comp")
     const [upper, setUpper]=useState(strikeParamemter.Upper || 200 );
     const [lower,setLower]=useState(strikeParamemter.Lower || 50);
     useEffect(()=>{ handlePremiumRange(id,lower,upper) },[upper,lower])

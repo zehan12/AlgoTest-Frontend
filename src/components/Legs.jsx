@@ -6,6 +6,7 @@ import { db } from "../firebase";
 import {
     collection,
     getDocs,
+    getDoc,
     addDoc,
     updateDoc,
     deleteDoc,
@@ -26,8 +27,7 @@ const Legs = () => {
     // const [legItems, setLegItems] = useState(JSON.parse(localStorage.getItem("LEG")) || [])
 
     const fetchLegs = async () => {
-        const data = await getDocs(legsCollectionRef);
-        data.docs.forEach((doc) => console.log({ ...doc.data(), id: doc.id }))
+        const data = await getDocs(legsCollectionRef);      
         setLegItems(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     }
 
@@ -61,23 +61,32 @@ const Legs = () => {
 
     const handleChange = ({ target }) => {
         const { name, value } = target
-        // switch ( name ) {
-        //     case "totalLot":
-        //         return setTotalLeg(value)
-        //        default:
-        //            return
-        // }
-        if (name === "totalLot") setTotalLeg(value);
-        else if (name === "position") setPosition(value);
-        else if (name === "optionType") setOptionType(value);
-        else if (name === "expiry") setExpiry(value);
-        else if (name === "strike") setStrike(value);
-        else if (name === "strikeType") setStrikeType(value);
-        else if (name === "premium") setPremium(value);
-        else if (name === "upper") setUpper(value);
-        else if (name === "lower") setLower(value);
-        else if (name === "plusMinus") setPlusMinus(value);
-        else if (name === "multiplier") setMultiplier(value);
+        switch ( name ) {
+            case "totalLot":
+                return setTotalLeg(value);
+            case "position":
+                return setPosition(value);
+            case "optionType":
+                return setOptionType(value);
+            case "expiry":
+                return  setExpiry(value);
+            case "strike":
+                return setStrike(value);
+            case "strikeType":
+                return setStrikeType(value);
+            case "premium": 
+                return setPremium(value);
+            case "upper":
+                return setUpper(value);
+            case "lower":
+                return setLower(value);
+            case "plusMinus":
+                return setPlusMinus(value);
+            case "multiplier":
+                return setMultiplier(value);
+               default:
+                   return
+        }
     }
 
     const handleSubmit = async (e) => {
@@ -105,7 +114,7 @@ const Legs = () => {
 
         toast.success("leg Added")
         setLoading(false)
-        // fetchLegs()
+        fetchLegs()
     }
 
 
@@ -114,20 +123,15 @@ const Legs = () => {
     const handleDelete = async (id) => {
         toast.success(`Leg ID:${id} is Deleted`)
         const legDoc = doc(db, "legs", id);
-        await deleteDoc(legDoc);
+        await deleteDoc(legDoc.data());
         fetchLegs()
-        // let itemUpdatedClone = legItems.filter(item => (item.id !== id))
-        // setLegItems(itemUpdatedClone)
     }
 
     // const handleItems = (id, { target }) => {
     //     const { name, value } = target;
-    //     console.log(name, value, target.type)
     //     if (target.type === "checkbox" && target.checked !== undefined) {
-    //         console.log("heler")
     //         let toggleEnables = legItems.map(item => {
     //             if (item.id === id) {
-    //                 console.log("val", item[name])
     //                 item[name] = !!target.checked;
     //             }
     //             return { ...item }
@@ -144,14 +148,20 @@ const Legs = () => {
     //     }
     // }
 
+    const handleCreateCopy = async (id) => {
+        const legRef = doc(db, "legs", id);
+        const legSnap = await getDoc(legRef);
+        await addDoc(legsCollectionRef, legSnap.data());
+        fetchLegs();
+        toast.success("Leg Added")
+    }
+
 
     const handleItems = async (id, { target }) => {
         const { name, value } = target;
-        console.log(name, target.type, target.checked);
         let newFields
         const legDoc = doc(db, "legs", id);
         if (target.type === "checkbox" && target.checked !== undefined) {
-            // console.log("value::::",typeof value)
             newFields = { [name]: target.checked };
         }
         else {
@@ -194,7 +204,7 @@ const Legs = () => {
                             <button className="px-14 py-1 bg-[#375A9E] text-white text-sm font-semibold rounded-full mr-2"
                                 disable={loading}
                                 onClick={(e) => handleSubmit(e)}
-                            >{loading === false ? <Loading text={"Adding Leg"} />
+                            >{loading ? <Loading text={"Adding Leg"} />
                                 : "Add Leg"}</button>
                             <button
                                 className="px-14 py-1 bg-white text-[#375A9E] text-sm font-semibold rounded-full ml-2"
@@ -207,6 +217,7 @@ const Legs = () => {
                 legItems={legItems}
                 handleDelete={handleDelete}
                 handleItems={handleItems}
+                handleCreateCopy={handleCreateCopy}
             />
         </Fragment>
     )

@@ -3,11 +3,12 @@ import LegCard from "./LegCard";
 
 
 
-const LegList = ({ legItems, handleDelete, handleItems }) => {
+const LegList = ({ legItems, handleDelete, handleItems, handleCreateCopy }) => {
 
     return (
         <Fragment>
             {legItems.map((leg) => <LegCard
+                key={leg.id}
                 Lots={leg.Lots}
                 positionType={leg.PositionType}
                 instrumentKind={leg.InstrumentKind}
@@ -20,13 +21,13 @@ const LegList = ({ legItems, handleDelete, handleItems }) => {
                 legTrailSLValue={leg.LegTrailSL}
                 legReentryTPValue={leg.LegReentryTP}
                 legReentrySLValue={leg.LegReentrySL}
-                key={leg.id}
                 id={leg.id}
                 handleDelete={handleDelete}
                 handleItems={handleItems}
+                handleCreateCopy={handleCreateCopy}
             />)}
         </Fragment>
     )
-} 
+}
 
 export default LegList;

@@ -17,7 +17,7 @@ const StraddleWidthCard = ({id, handleStraddle, strikeParamemter }) => {
 
             <input
                 className="border-black text-sm  m-3 py-1 px-3 rounded-full h-5 w-14"
-                type="number" min="1" defaultValue={1.5} value={val} onChange={(e)=>setVal(+e.target.value)} />
+                type="number" min="1" value={val} onChange={(e)=>setVal(+e.target.value)} />
             <h4>
                 <b>x </b> ATM Straddle Price <b> )]</b>
             </h4>
