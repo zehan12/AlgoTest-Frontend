@@ -18,6 +18,9 @@ const LegList = ({ legItems, handleDelete, handleItems, handleCreateCopy }) => {
                 legMomentumValue={leg.LegMomentum}
                 legTargetValue={leg.LegTarget}
                 legStopLossValue={leg.LegStopLoss}
+
+                legTrailSLEnable={leg.LegTrailSLEnable}
+
                 legTrailSLValue={leg.LegTrailSL}
                 legReentryTPValue={leg.LegReentryTP}
                 legReentrySLValue={leg.LegReentrySL}

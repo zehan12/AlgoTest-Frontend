@@ -3,6 +3,7 @@ import ClosestPremium from "./strikes/ClosestPremium";
 import PremiumRange from "./strikes/PremiumRange";
 import StraddleWidth from "./strikes/StraddleWidth";
 import StrikeType from "./strikes/StrikeType";
+import { STRIKE_VALUE } from "../utils/constant";
 
 
 const Segment = ({
@@ -31,20 +32,40 @@ const Segment = ({
   }
 
 
-  // const RenderStrikes = ( type ) => {
-  //   switch( type ) {
-  //     case "Strike Type":
-  //       return <StrikeType />
-  //     case "Premium Range":
-  //       return <PremiumRange />
-  //     case "Closest Range":
-  //       return <ClosestRange />
-  //     case "Straddle Width":
-  //       return <StraddleWidth />
-  //     default :
-  //       return ""
-  //   }
-  // }
+  const RenderStrikes = (type) => {
+    switch (type) {
+      case STRIKE_VALUE.strikeType:
+        return (<StrikeType
+          handleChange={handleChange}
+          strikeType={strikeType}
+        />)
+      case STRIKE_VALUE.premiumRange:
+        return (
+          <PremiumRange
+            handleChange={handleChange}
+            lower={lower}
+            upper={upper}
+          />
+        )
+      case STRIKE_VALUE.closestPremium:
+        return (
+          <ClosestPremium
+            handleChange={handleChange}
+            premium={premium}
+          />
+        )
+      case STRIKE_VALUE.straddleWidth:
+        return (
+          <StraddleWidth
+            handleChange={handleChange}
+            plusMinus={plusMinus}
+            multiplier={multiplier}
+          />
+        )
+      default:
+        return ""
+    }
+  }
 
 
   return (
@@ -55,11 +76,11 @@ const Segment = ({
           <h3 className="font-bold m-2">Select segments </h3>
           <div className="flex">
             <button
-              className={`text-sm ml-3  pr-3 pl-4 p-1 rounded-l-full	hover:bg-blue-700 ${selected === "futures" ? "bg-[#375A9E] text-white": "bg-white text-[#3F3F3F]" }`}
+              className={`text-sm ml-3  pr-3 pl-4 p-1 rounded-l-full	hover:bg-blue-700 ${selected === "futures" ? "bg-[#375A9E] text-white" : "bg-white text-[#3F3F3F]"}`}
               style={{ backgroundColor: selected === "futures" ? "#375A9E" : "white", color: selected === "futures" ? "white" : "#3F3F3F" }}
               onClick={(e) => handleClick(e)}>Futures</button>
             <button
-              className={`text-sm pr-4 pl-3 rounded-r-full ${selected === "options" ? "bg-[#375A9E] text-white": "bg-white text-[#3F3F3F]" }`}
+              className={`text-sm pr-4 pl-3 rounded-r-full ${selected === "options" ? "bg-[#375A9E] text-white" : "bg-white text-[#3F3F3F]"}`}
               onClick={(e) => handleClick(e)}>Options</button>
           </div>
         </div>
@@ -91,7 +112,7 @@ const Segment = ({
           </Fragment>
             :
             <Fragment>
-              <div 
+              <div
                 className="flex flex-wrap md:flex-row justify-evenly p-5"
               >
                 <div>
@@ -133,28 +154,7 @@ const Segment = ({
                   </select>
                 </div>
                 {
-                  strike === "Strike Type" ?
-                    <StrikeType
-                      handleChange={handleChange}
-                      strikeType={strikeType}
-                    />
-                    : strike === "Premium Range" ?
-                      <PremiumRange
-                        handleChange={handleChange}
-                        lower={lower}
-                        upper={upper}
-                      />
-                      : strike === "Closest Premium" ?
-                        <ClosestPremium
-                          handleChange={handleChange}
-                          premium={premium}
-                        />
-                        : strike === "Straddle Width" ? <StraddleWidth
-                          handleChange={handleChange}
-                          plusMinus={plusMinus}
-                          multiplier={multiplier}
-                        />
-                          : ""
+                  RenderStrikes(strike)
                 }
               </div>
             </Fragment>

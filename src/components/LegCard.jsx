@@ -39,14 +39,13 @@ const LegCard = ({
     handleCreateCopy
 }) => {
 
-
     const handleTrailSl = (id, e) => {
         let clone = { ...legTrailSLValue }
         clone.Value[e.target.name] = +e.target.value
         handleItems(id, { target: { name: "LegTrailSL", value: { ...clone } } })
     }
 
-    const handleType = (id, e ) => {
+    const handleType = (id, e) => {
         let clone = { ...legTrailSLValue };
         clone.Type = e.target.value
         handleItems(id, { target: { name: "LegTrailSL", value: { ...clone } } })
@@ -103,6 +102,45 @@ const LegCard = ({
 
 
 
+    const renderStrikes = (Type) => {
+        switch (Type) {
+            case "Strike Type":
+                return (
+                    <StrikesTypes
+                        id={id}
+                        handleStrike={handleStrike}
+                        strikeParamemter={strikeParamemter}
+                    />
+                )
+            case "Premium Range":
+                return (
+                    <PremiumRangeCard
+                        id={id}
+                        handlePremiumRange={handlePremiumRange}
+                        strikeParamemter={strikeParamemter}
+                    />
+                )
+            case "Closest Premium":
+                return (
+                    <ClosestPremiumCard
+                        id={id}
+                        handlePremium={handlePremium}
+                        strikeParamemter={strikeParamemter}
+                    />
+                )
+            case "Straddle Width":
+                return (
+                    <StraddleWidthCard
+                        id={id}
+                        strikeParamemter={strikeParamemter}
+                        handleStraddle={handleStraddle}
+                    />
+                )
+            default:
+                return "";
+        }
+    }
+
 
     return (
         <Fragment>
@@ -114,12 +152,11 @@ const LegCard = ({
                         <ImCross size={10} />
                     </div>
                     <div
-                    onClick={()=>{handleCreateCopy(id)}}
-                     className="mt-3 p-1 bg-white text-blue-300 border rounded-full h-7 w-7">
+                        onClick={() => { handleCreateCopy(id) }}
+                        className="mt-3 p-1 bg-white text-blue-300 border rounded-full h-7 w-7">
                         <FaRegCopy />
                     </div>
                 </div>
-                {/* <div onClick={() => handleDelete(id)}className="bg-red-600 text-xs  w-40">{id}</div> */}
 
                 <div className="flex flex-wrap justify-center items-baseline pt-5">
                     <h4 className="font-bold">
@@ -158,32 +195,7 @@ const LegCard = ({
                     />
 
                     {
-                        Type === "Strike Type" ?
-                            <StrikesTypes
-                                id={id}
-                                handleStrike={handleStrike}
-                                strikeParamemter={strikeParamemter}
-                            /> :
-                            Type === "Premium Range" ?
-                                <PremiumRangeCard
-                                    id={id}
-                                    handlePremiumRange={handlePremiumRange}
-                                    strikeParamemter={strikeParamemter}
-                                /> :
-                                Type === "Closest Premium" ?
-                                    <ClosestPremiumCard
-                                        id={id}
-                                        handlePremium={handlePremium}
-                                        strikeParamemter={strikeParamemter}
-                                    /> :
-                                    Type === "Straddle Width" ?
-                                        <StraddleWidthCard
-                                            id={id}
-                                            strikeParamemter={strikeParamemter}
-                                            handleStraddle={handleStraddle}
-                                        />
-                                        : ""
-
+                        renderStrikes(Type)
                     }
 
                 </div>

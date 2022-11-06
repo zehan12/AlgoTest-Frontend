@@ -37,7 +37,8 @@ const AddValueCard = (
                     {
                         arrayOfOptions.map((opt) => (
                             <option key={opt.val} value={opt.value}>{opt.label}
-                                {/* {opt.direction ? <>&uarr;</> : <>&darr;</>} */}
+                                {opt.direction === "up" ? <>&uarr </> : opt.direction === "down" ? <>&darr;</> : ""
+                                }
                             </option>
                         ))
                     }

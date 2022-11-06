@@ -1,8 +1,8 @@
 import { Fragment, useState, useEffect } from "react"
 import LegList from "./LegList";
 import Segment from "./Segment";
-
-import { db } from "../firebase";
+import { PROPERTIES, STRIKE_VALUE, INITIAL } from "../utils/constant";
+import { db, LEGS } from "../firebase";
 import {
     collection,
     getDocs,
@@ -20,7 +20,7 @@ import Loading from "./Loading";
 const Legs = () => {
 
 
-    const legsCollectionRef = collection(db, "legs");
+    const legsCollectionRef = collection(db, LEGS);
 
     //! add legItems in state
     const [legItems, setLegItems] = useState([])
@@ -45,44 +45,43 @@ const Legs = () => {
 
     //* options states initialised with default value
     const [totalLeg, setTotalLeg] = useState(1);
-    const [position, setPosition] = useState("Sell");
-    const [optionType, setOptionType] = useState("Call");
-    const [expiry, setExpiry] = useState("Weekly");
-    const [strike, setStrike] = useState("Strike Type");
-    const [strikeType, setStrikeType] = useState("ATM");
+    const [position, setPosition] = useState(INITIAL.position);
+    const [optionType, setOptionType] = useState(INITIAL.optionType);
+    const [expiry, setExpiry] = useState(INITIAL.expiry);
+    const [strike, setStrike] = useState(INITIAL.strike);
+    const [strikeType, setStrikeType] = useState(INITIAL.strikeType);
     const [upper, setUpper] = useState(200);
     const [lower, setLower] = useState(50);
     const [premium, setPremium] = useState(50);
     const [plusMinus, setPlusMinus] = useState("+");
     const [multiplier, setMultiplier] = useState(0.5);
 
-
     const [loading, setLoading] = useState(false);
 
     const handleChange = ({ target }) => {
         const { name, value } = target
         switch ( name ) {
-            case "totalLot":
+            case PROPERTIES.totalLot :
                 return setTotalLeg(value);
-            case "position":
+            case PROPERTIES.position :
                 return setPosition(value);
-            case "optionType":
+            case PROPERTIES.optionType :
                 return setOptionType(value);
-            case "expiry":
+            case PROPERTIES.expiry :
                 return  setExpiry(value);
-            case "strike":
+            case PROPERTIES.strike :
                 return setStrike(value);
-            case "strikeType":
+            case PROPERTIES.strikeType :
                 return setStrikeType(value);
-            case "premium": 
+            case PROPERTIES.premium : 
                 return setPremium(value);
-            case "upper":
+            case PROPERTIES.upper :
                 return setUpper(value);
-            case "lower":
+            case PROPERTIES.lower :
                 return setLower(value);
-            case "plusMinus":
+            case PROPERTIES.plusMinus :
                 return setPlusMinus(value);
-            case "multiplier":
+            case PROPERTIES.multiplier :
                 return setMultiplier(value);
                default:
                    return
@@ -94,21 +93,21 @@ const Legs = () => {
         setLoading(true)
 
         e.preventDefault();
-        let StrikeParameter = strike === "Strike Type" ? strikeType :
-            strike === "Premium Range" ? { Lower: lower, Upper: upper } :
-                strike === "Closest Premium" ? { Premium: premium } :
-                    strike === "Straddle Width" ? { Adjustment: plusMinus, Multiplier: multiplier } : ""
+        let StrikeParameter = strike === STRIKE_VALUE.strikeType ? strikeType :
+            strike === STRIKE_VALUE.premiumRange ? { Lower: lower, Upper: upper } :
+                strike === STRIKE_VALUE.closestPremium ? { Premium: premium } :
+                    strike === STRIKE_VALUE.straddleWidth ? { Adjustment: plusMinus, Multiplier: multiplier } : ""
 
 
         await addDoc(legsCollectionRef, {
             createId: Date.now(), PositionType: position, Lots: totalLeg,
             ExpiryKind: expiry, EntryType: strike, StrikeParameter, InstrumentKind: optionType,
-            LegStopLossEnable: false, LegStopLoss: { Type: "None", Value: 0, },
-            LegTargetEnable: false, LegTarget: { Type: "None", Value: 0, },
-            LegTrailSLEnable: false, LegTrailSL: { Type: "None", Value: { InstrumentMove: 0, StopLossMove: 0, } },
-            LegMomentumEnable: false, LegMomentum: { Type: "None", Value: 0 },
-            LegReentrySLEnable: false, LegReentrySL: { Type: "None", Value: 1 },
-            LegReentryTPEnable: false, LegReentryTP: { Type: "None", Value: 1 }
+            LegStopLossEnable: false, LegStopLoss: { Type: INITIAL.type, Value: 0, },
+            LegTargetEnable: false, LegTarget: { Type: INITIAL.type, Value: 0, },
+            LegTrailSLEnable: false, LegTrailSL: { Type: INITIAL.type, Value: { InstrumentMove: 0, StopLossMove: 0, } },
+            LegMomentumEnable: false, LegMomentum: { Type: INITIAL.type, Value: 0 },
+            LegReentrySLEnable: false, LegReentrySL: { Type: INITIAL.type, Value: 1 },
+            LegReentryTPEnable: false, LegReentryTP: { Type: INITIAL.type, Value: 1 }
         });
 
 
@@ -122,34 +121,15 @@ const Legs = () => {
 
     const handleDelete = async (id) => {
         toast.success(`Leg ID:${id} is Deleted`)
-        const legDoc = doc(db, "legs", id);
+        const legDoc = doc(db, LEGS, id);
         await deleteDoc(legDoc.data());
         fetchLegs()
     }
 
-    // const handleItems = (id, { target }) => {
-    //     const { name, value } = target;
-    //     if (target.type === "checkbox" && target.checked !== undefined) {
-    //         let toggleEnables = legItems.map(item => {
-    //             if (item.id === id) {
-    //                 item[name] = !!target.checked;
-    //             }
-    //             return { ...item }
-    //         })
-    //         setLegItems([...toggleEnables]);
-    //     } else {
-    //         let itemUpdatedClone = legItems.map(item => {
-    //             if (item.id === id) {
-    //                 item[name] = value
-    //             }
-    //             return { ...item }
-    //         })
-    //         setLegItems([...itemUpdatedClone]);
-    //     }
-    // }
+   
 
     const handleCreateCopy = async (id) => {
-        const legRef = doc(db, "legs", id);
+        const legRef = doc(db, LEGS, id);
         const legSnap = await getDoc(legRef);
         await addDoc(legsCollectionRef, legSnap.data());
         fetchLegs();
@@ -160,7 +140,7 @@ const Legs = () => {
     const handleItems = async (id, { target }) => {
         const { name, value } = target;
         let newFields
-        const legDoc = doc(db, "legs", id);
+        const legDoc = doc(db, LEGS, id);
         if (target.type === "checkbox" && target.checked !== undefined) {
             newFields = { [name]: target.checked };
         }

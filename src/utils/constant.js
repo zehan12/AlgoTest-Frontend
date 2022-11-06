@@ -1,36 +1,74 @@
+const STRIKE_VALUE = {
+    strikeType: "Strike Type",
+    premiumRange: "Premium Range",
+    closestPremium: "Closest Premium",
+    straddleWidth: "Straddle Width"
+}
+
+const INITIAL = {
+    type:"None",
+    position:"Sell",
+    optionType:"Call",
+    expiry:"Weekly",
+    strike:"Strike Type",
+    strikeType:"ATM"
+}
+
+const PROPERTIES = {
+    totalLot: "totalLot",
+    position: "position",
+    optionType: "optionType",
+    expiry: "expiry",
+    strike: "strike",
+    strikeType: "strikeType",
+    premium: "premium",
+    upper: "upper",
+    lower: "lower",
+    plusMinus: "plusMinus",
+    multiplier: "multiplier"
+}
+
 const simpleMomentumOptions = [
     {
         label: "Points",
         value: "PointsUp",
-        direction: true
+        direction: "up",
     },
     {
         label: "Points &darr",
-        value: "PointsDown"
+        value: "PointsDown",
+        direction: "down",
     },
     {
         label: "Premium Range &Uarr",
-        value: "PremiumRangeUp"
+        value: "PremiumRangeUp",
+        direction: "up",
     },
     {
         label: "Premium Range &darr",
-        value: "PremiumRangeDown"
+        value: "PremiumRangeDown",
+        direction: "down",
     },
     {
         label: "Underlying Points &uarr",
-        value: "UnderlyingPointsUp"
+        value: "UnderlyingPointsUp",
+        direction: "up",
     },
     {
         label: "Underlying Points &darr",
         value: "UnderlyingPointsDown",
+        direction: "down",
+
     },
     {
         label: "Underlying Points Premium &uarr",
-        value: "UnderlyingPointsPremiumUp"
+        value: "UnderlyingPointsPremiumUp",
+        direction: "up",
     },
     {
         label: "Underlying Points Premium &darr",
         value: "UnderlyingPointsPremiumDown",
+        direction: "down",
     }
 ]
 
@@ -39,33 +77,53 @@ const targetProfitAndStopLossOptions = [
     {
         label: "Points",
         value: "Points",
+        direction: "none",
     },
     {
         label: "Underlying Points",
-        value: "UnderlyingPoints"
+        value: "UnderlyingPoints",
+        direction: "none",
     },
     {
         label: "Percentage",
-        value: "Percentage"
+        value: "Percentage",
+        direction: "none",
     },
     {
         label: "Underlying Percentage",
-        value: "UnderlyingPercentage"
+        value: "UnderlyingPercentage",
+        direction: "none",
+
     },
 ]
 
 
 const reEntryArray = [
-    { value: "ASAP", label: "RE ASAP" },
-    { value: "ASAPReverse", label: "RE ASAP" },
-    { value: "Momentum", label: "RE MOMENTUM" },
-    { value: "MomentumReverse", label: "RE MOMENTUM" },
-    { value: "COST", label: "RE COST" },
-    { value: "COSTReverse", label: "RE COST " },
+    {
+        value: "ASAP", label: "RE ASAP", direction: "none",
+    },
+    {
+        value: "ASAPReverse", label: "RE ASAP", direction: "reverse",
+    },
+    {
+        value: "Momentum", label: "RE MOMENTUM", direction: "none",
+    },
+    {
+        value: "MomentumReverse", label: "RE MOMENTUM", direction: "reverse",
+    },
+    {
+        value: "COST", label: "RE COST", direction: "none"
+    },
+    {
+        value: "COSTReverse", label: "RE COST", direction: "reverse"
+    },
 ]
 
 
 export {
+    STRIKE_VALUE,
+    INITIAL,
+    PROPERTIES,
     simpleMomentumOptions,
     targetProfitAndStopLossOptions,
     reEntryArray
